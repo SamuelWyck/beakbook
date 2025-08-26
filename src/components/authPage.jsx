@@ -16,7 +16,7 @@ function AuthPage({signup}) {
     useEffect(function() {
         apiManager.checkAuthStatus().then(function(res) {
             if (res.errors) {
-                setErrors(res.errors);
+                setErrors(getErrorCards(res.errors));
                 return;
             }
             if (res.authenticated) {
