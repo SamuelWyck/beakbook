@@ -1,0 +1,43 @@
+.loading-main {
+	background-color: var(--middleground-color);
+	display: flex;
+	justify-content: center;
+	align-items: start;
+	padding-top: 15%;
+}
+
+.loading-wrapper {
+	display: flex;
+	width: 200px;
+	position: relative;
+}
+
+.loading {
+	color: var(--middleground-color);
+	font-size: 2rem;
+	font-weight: bold;
+	position: absolute;
+	left: 5%;
+	right: 0;
+	width: fit-content;
+	margin: 0 auto;
+	top: 35%;
+    animation-name: blink;
+    animation-timing-function: linear;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+}
+
+.loading-img {
+	width: 100%;
+	filter: var(--background-img-filter);
+}
+
+
+
+@keyframes blink {
+    0% {color: var(--foreground-color);}
+    30% {color: var(--foreground-color);}
+    92% {color: var(--middleground-color);}
+    100% {color: var(--foreground-color);}
+}
