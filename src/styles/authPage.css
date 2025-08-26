@@ -11,7 +11,10 @@ main.auth-page {
     background-color: var(--middleground-color);
     padding: 2rem 1.5rem;
     border-radius: 10px;
-    box-shadow: var(--large-shadow)
+    box-shadow: var(--large-shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .auth-modal form {
@@ -70,11 +73,10 @@ main.auth-page {
     display: block;
     width: fit-content;
     color: var(--text-muted);
-    margin: 1.5rem auto 0 auto;
+    margin: 0 auto;
 }
 
 .auth-banner {
-    margin-bottom: 1.5rem;
     display: flex;
     width: 100%;
     justify-content: space-around;
@@ -88,4 +90,10 @@ main.auth-page {
 
 .auth-title {
     font-size: 2rem;
+}
+
+.auth-modal .error {
+    max-width: 26ch;
+    word-break: break-word;
+    margin: .5rem 0;
 }
