@@ -2,10 +2,29 @@ import { Link } from "react-router-dom";
 import "../styles/authPage.css";
 import logoImg from "../assets/logo.png";
 import apiManager from "../utils/apiManager.js";
+import {useState, useRef, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
 function AuthPage({signup}) {
+    const [errors, setErrors] = useState(null);
+    const navigate = useNavigate();
+    const formRef = useRef();
+
+
+    useEffect(function() {
+        apiManager.checkAuthStatus().then(function(res) {
+            if (res.errors) {
+                setErrors(res.errors);
+                return;
+            }
+            if (res.authenticated) {
+                navigate("/", {replace: true});
+            }
+        });
+    }, [navigate]);
+
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -17,14 +36,42 @@ function AuthPage({signup}) {
             reqBody[key] = value;
         }
         reqBody = JSON.stringify(reqBody);
-        
+
         let res;
         if (signup) {
             res = await apiManager.signupUser(reqBody);
         } else {
             res = await apiManager.loginUser(reqBody);
         }
-        console.log(res)
+        
+        if (res.errors) {
+            setErrors(getErrorCards(res.errors));
+            return;
+        }
+
+        navigate("/", {replace: true});
+    };
+
+
+    function cleanForm() {
+        if (errors) {
+            setErrors(null);
+        }
+        formRef.current.reset();
+    };
+
+
+    function getErrorCards(errors) {
+        const errorCards = [];
+        for (let error of errors) {
+            errorCards.push(
+                <li 
+                    className="error"
+                    key={error.msg}
+                >{error.msg}</li>
+            );
+        }
+        return errorCards;
     };
 
 
@@ -38,7 +85,10 @@ function AuthPage({signup}) {
                 </p>
                 <img src={logoImg} alt="logo" />
             </div>
-            <form onSubmit={handleSubmit}>
+            {!errors ||
+            <ul className="errors">{errors}</ul>
+            }
+            <form onSubmit={handleSubmit} ref={formRef}>
                 {!signup ||
                 <div>
                     <label htmlFor="email">Email</label>
@@ -63,7 +113,7 @@ function AuthPage({signup}) {
                     <button>{(signup) ? "Sign up" : "Log in"}</button>
                 </div>
             </form>
-            <Link to={(signup) ? "/login" : "/signup"}>
+            <Link to={(signup) ? "/login" : "/signup"} onClick={cleanForm}>
                 {`${(signup ? "Already" : "Don't")} have an account?`}
             </Link>
         </div>
