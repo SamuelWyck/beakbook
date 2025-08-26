@@ -1,7 +1,10 @@
 import "../styles/header.css";
 import { Component } from "react";
 import logoImg from "../assets/logo.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import apiManager from "../utils/apiManager.js";
+import profileImg from "../assets/profile.svg";
+import menuArrowImg from "../assets/menu-arrow.svg";
 
 
 
@@ -10,12 +13,55 @@ class Header extends Component {
         super(props);
 
         this.state = {
-            user: null
+            user: null,
+            redirect: false
         };
+
+        this.updateUser = this.updateUser.bind(this);
+        this.handleLogout = this.handleLogout.bind(this);
+    };
+
+
+    updateUser(user) {
+        if (!user && !this.state.user) {
+            return;
+        }
+        if ((user && this.state.user) && user.id === this.state.user.id) {
+            return;
+        }
+
+        this.setState(function(state) {
+            return {...state, user: user};
+        });
+    };
+
+
+    handleMenu() {
+        const userMenu = document.querySelector(".user-menu");
+        userMenu.classList.toggle("hidden");
+        const menuArrow = document.querySelector(".menu-arrow");
+        menuArrow.classList.toggle("rotate");
+    };
+
+
+    async handleLogout(event) {
+        event.preventDefault();
+        const res = await apiManager.logoutUser();
+        if (res.errors) {
+            return;
+        }
+
+        this.setState(function(state) {
+            return {...state, redirect: true};
+        });
     };
 
 
     render() {
+        if (this.state.redirect) {
+            return <Navigate to={"/login"} replace={true} />;
+        }
+
         return (
         <header>
             <Link to="/">
@@ -30,23 +76,28 @@ class Header extends Component {
                 <p className="banner-title">Beakbook</p>
             </div>
             </Link>
+            {(this.state.user) ?
             <nav>
-            {
-            (this.state.user) ?
-            <button className="user-info-btn">
-                <img 
-                    src={(this.state.user.profileImgUrl) ? this.state.user.profileImgUrl : logoImg} 
-                    alt="profile-pic"
-                    className="main-user-profile-pic"
-                />
-                <p className="main-user-username">{this.state.user.username}</p>
-            </button> :
-            <>
-            <Link to="/login">Log in</Link>
-            <Link to="/signup">Sign up</Link>
-            </>
+                <button className="user-info-btn" onClick={this.handleMenu}>
+                    <img 
+                        src={(this.state.user.profileImgUrl) ? this.state.user.profileImgUrl : profileImg} 
+                        alt="profile-pic"
+                        className={`main-user-profile-pic${(this.state.user.profileImgUrl) ? "" : " default"}`}
+                    />
+                    <p className="main-user-username">{this.state.user.username}</p>
+                    <img 
+                        src={menuArrowImg} 
+                        alt="arrow" 
+                        className="rotate menu-arrow"
+                    />
+                    <div className="user-menu hidden">
+                        <Link to="/profile">Profile</Link>
+                        <Link onClick={this.handleLogout}>Log out</Link>
+                    </div>
+                </button> 
+            </nav> :
+            <p></p>
             }
-            </nav>
         </header>
         );
     };
