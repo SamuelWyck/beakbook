@@ -4,6 +4,7 @@ header {
     justify-content: space-evenly;
     align-items: center;
     padding: .5rem 0;
+    position: relative;
 }
 
 header > a {
@@ -41,7 +42,6 @@ header nav button {
     border: none;
     color: var(--text-muted);
     font-size: 1rem;
-    position: relative;
 }
 
 .main-user-username {
@@ -73,14 +73,15 @@ header nav button img {
 .user-menu {
     position: absolute;
     background-color: var(--foreground-color);
-    top: 100%;
-    right: 10%;
+    top: 90%;
+    right: 22%;
     padding: 1rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1rem;
     border-radius: 10px;
     width: max-content;
+    z-index: 2;
 }
 
 .user-menu a {
