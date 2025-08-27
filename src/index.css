@@ -46,6 +46,15 @@ html {
 	hue-rotate(194deg) 
 	brightness(93%) 
 	contrast(88%);
+	--highlight-img-filter: 
+	brightness(0) 
+	saturate(100%) 
+	invert(65%) 
+	sepia(15%) 
+	saturate(828%) 
+	hue-rotate(204deg) 
+	brightness(90%) 
+	contrast(82%);
 	--text-muted-img-filter: 
 	brightness(0) 
 	saturate(100%) 
