@@ -36,7 +36,8 @@ class Header extends Component {
     };
 
 
-    handleMenu() {
+    handleMenu(event) {
+        event.stopPropagation();
         const userMenu = document.querySelector(".user-menu");
         userMenu.classList.toggle("hidden");
         const menuArrow = document.querySelector(".menu-arrow");
@@ -90,11 +91,11 @@ class Header extends Component {
                         alt="arrow" 
                         className="rotate menu-arrow"
                     />
-                    <div className="user-menu hidden">
-                        <Link to="/profile">Profile</Link>
-                        <Link onClick={this.handleLogout}>Log out</Link>
-                    </div>
                 </button> 
+                <div className="user-menu hidden">
+                    <Link to="/profile">Profile</Link>
+                    <Link onClick={this.handleLogout}>Log out</Link>
+                </div>
             </nav> :
             <p></p>
             }
