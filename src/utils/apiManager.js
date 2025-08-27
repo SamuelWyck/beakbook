@@ -82,6 +82,11 @@ class ApiManager {
         const response = await this.#makeApiCall(url, options);
         return response;
     };
+
+
+    getSocketUrl(roomId) {
+        return `${this.#apiDomain}/ws/${roomId}`;
+    };
 };
 
 
