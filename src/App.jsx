@@ -11,10 +11,7 @@ function App() {
 	useEffect(function() {
 		function handleClick(event) {
 			const target = event.target;
-			const badTarget = target.matches(".user-menu") ||
-			target.matches(".user-info-btn") ||
-			target.parentElement.matches(".user-info-btn");
-			if (badTarget) {
+			if (target.matches(".user-menu")) {
 				return;
 			}
 
