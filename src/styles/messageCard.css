@@ -1,0 +1,96 @@
+.msg-card {
+    display: flex;
+    padding: .5rem;
+    color: var(--text-muted);
+    width: min(800px, 100%);
+    gap: .5rem;
+    border-radius: 10px;
+    align-items: start;
+    font-size: clamp(.9rem, .5rem + 2vw, 1rem);
+}
+
+.msg-card:hover, .msg-card:focus {
+    background-color: var(--background-color);
+}
+
+.msg-content {
+    flex: 1;
+}
+
+.msg-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: .3rem;
+}
+
+.msg-author {
+    display: flex;
+    align-items: end;
+    gap: .5rem;
+}
+
+.msg-profile-wrapper {
+    max-width: 45px;
+    display: flex;
+}
+
+.msg-profile {
+    width: 100%;
+}
+
+.msg-profile.default {
+    filter: var(--highlight-img-filter);
+}
+
+.msg-username {
+    font-weight: bold;
+}
+
+.msg-date {
+    font-size: .8rem;
+    opacity: .8;
+}
+
+.msg-text {
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.msg-edit-btns {
+   display: flex;
+   gap: 1rem; 
+}
+
+.msg-edit-btns button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+    max-width: 20px;
+    --filter: var(--foreground-img-filter)
+}
+
+.msg-edit-btns button img {
+    width: 100%;
+    filter: var(--filter);
+}
+
+.msg-edit-btns button:hover, 
+.msg-edit-btns button:focus {
+    --filter: var(--highlight-img-filter)
+}
+
+.msg-text-editing {
+    background-color: var(--background-color);
+    border: 1px solid var(--foreground-color);
+    border-radius: 10px;
+    padding: .5rem;
+    color: var(--text-muted);
+    font-size: clamp(.9rem, .5rem + 2vw, 1rem);
+    field-sizing: content;
+    width: 100%;
+    word-break: break-word;
+    resize: none;
+    outline: none;
+}
