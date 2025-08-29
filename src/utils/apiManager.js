@@ -84,6 +84,49 @@ class ApiManager {
     };
 
 
+    async getChatMessages(roomId) {
+        const url = `${this.#apiDomain}/messages/${roomId}`;
+        const options = {
+            mode: "cors",
+            method: "GET",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
+    async editMessage(reqBody, messageId) {
+        const url = `${this.#apiDomain}/messages/edit/${messageId}`;
+        const options = {
+            mode: "cors",
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody,
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
+    async deleteMessage(messageId) {
+        const url = `${this.#apiDomain}/messages/delete/${messageId}`;
+        const options = {
+            mode: "cors",
+            method: "DELETE",
+            credentials: "include"
+        };
+
+        const response = this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl(roomId) {
         return `${this.#apiDomain}/ws/${roomId}`;
     };
