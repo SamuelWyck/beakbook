@@ -3,6 +3,7 @@ main.main-page {
     height: 100%;
     display: grid;
     grid-template-columns: min(280px, 100%) 2fr;
+    position: relative;
 }
 
 .sidebar {
@@ -57,4 +58,16 @@ main.main-page {
     width: 100%;
     height: 100%;
     position: relative;
+}
+
+
+
+@media only screen and (width <= 600px) {
+    .main-pane {
+        position: static;
+    }
+
+    main.main-page {
+        grid-template-columns: 1fr min-content;
+    }
 }
