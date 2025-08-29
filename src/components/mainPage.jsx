@@ -14,6 +14,7 @@ function MainPage() {
     const headerRef = useOutletContext();
     const [userData, setUserData] = useState(null);
     const [roomId, setRoomId] = useState(null);
+    const [showingChat, setShowingChat] = useState(false);
 
 
     useEffect(function() {
@@ -38,11 +39,13 @@ function MainPage() {
         
         const roomId = target.dataset.chatid;
         setRoomId(roomId);
+        setShowingChat(true);
     };
 
 
     function handleClose() {
         setRoomId(null);
+        setShowingChat(false);
     };
 
 
@@ -68,10 +71,13 @@ function MainPage() {
             </div>
         </div>
         <div className="main-pane">
+            {!showingChat ||
             <ChatRoom 
                 roomId={roomId} 
-                handleClose={handleClose} 
+                handleClose={handleClose}
+                userId={userData.user.id}
             />
+            }
         </div>
     </main>
     );
