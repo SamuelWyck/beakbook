@@ -63,3 +63,15 @@ textarea#message {
     margin: 1rem;
     overflow: hidden;
 }
+
+.messages {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    overflow: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--foreground-color) var(--middleground-color);
+    padding: .5rem;
+    align-items: center;
+    scroll-behavior: smooth;
+}
