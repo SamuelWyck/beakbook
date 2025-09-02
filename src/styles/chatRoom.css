@@ -16,7 +16,7 @@
     padding: 1rem 1rem 0 0;
 }
 
-.exit-wrapper button {
+.exit-wrapper button, .status-modal button {
     cursor: pointer;
     background: none;
     border: none;
@@ -74,4 +74,34 @@ textarea#message {
     padding: .5rem;
     align-items: center;
     scroll-behavior: smooth;
+}
+
+.status-modal {
+    position: absolute;
+    top: 3%;
+    left: 1rem;
+    background-color: var(--foreground-color);
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .2rem .2rem .2rem .5rem;
+    color: var(--background-color);
+}
+
+.status-modal.hidden {
+    display: none;
+}
+
+.status-modal button {
+    --filter: var(--background-img-filter);
+}
+
+.status-modal button:hover {
+    --filter: var(--middleground-img-filter)
+}
+
+.status-modal button img {
+    width: 20px;
+    filter: var(--filter);
 }
