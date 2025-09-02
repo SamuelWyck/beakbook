@@ -7,13 +7,12 @@ import LoadingPage from "./loadingPage.jsx";
 
 
 
-function ChatRoom({roomId, handleClose, userId}) {
+function ChatRoom({roomId, handleClose, userId, socket}) {
     const pageNum = useRef(0);
     const fetchingMsgs = useRef(false);
     const moreMsgs = useRef(true);
     const scrollHeight = useRef(null);
     const [messages, setMessages] = useState(null);
-    const [webSocket, setWebSocket] = useState(null);
 
 
     useEffect(function() {
@@ -56,31 +55,37 @@ function ChatRoom({roomId, handleClose, userId}) {
             const messages = res.messages.reverse();
             setMessages(getMessageCards(messages));
             moreMsgs.current = res.moreMsgs;
-
-            const url = apiManager.getSocketUrl(roomId);
-            const socket = new WebSocket(url);
-            socket.onmessage = onMessage;
-            setWebSocket(socket);
         });
 
 
         document.addEventListener("keydown", triggerSubmit);
+
+        return function() {
+            document.removeEventListener(
+                "keydown", triggerSubmit
+            ); 
+        };
     }, [roomId]);
 
-    
-    function onMessage(event) {
-        const message = JSON.parse(event.data);
-        if (message.authorId === userId) {
-            cleanForm();
-        }
 
-        const msgCard = <MessageCard
-            key={message.id}
-            msg={message}
-            userId={userId}
-        />;
-        setMessages(messages => [...messages, msgCard]);
-    };
+    useEffect(function() {
+        socket.on("message", function(message) {
+            if (message.authorId == userId) {
+                cleanForm();
+            }
+
+            const msgCard = <MessageCard
+                key={message.id}
+                msg={message}
+                userId={userId}
+            />;
+            setMessages(messages => [...messages, msgCard]);
+        });
+
+        return function() {
+            socket.off("message");
+        };
+    }, [socket, userId]);
 
 
     async function handleScroll(event) {
@@ -110,6 +115,7 @@ function ChatRoom({roomId, handleClose, userId}) {
         moreMsgs.current = res.moreMsgs;
         const msgCards = getMessageCards(messages);
         setMessages(messages => [...msgCards, ...messages]);
+
         hideStatus();
         fetchingMsgs.current = false;
         scrollHeight.current = target.scrollHeight;
@@ -163,21 +169,18 @@ function ChatRoom({roomId, handleClose, userId}) {
         event.preventDefault();
         const formData = new FormData(event.target);
 
-        let reqBody = {};
+        const reqBody = {};
         for (let entry of formData.entries()) {
             const [key, value] = entry;
             reqBody[key] = value;
         }
-        reqBody = JSON.stringify(reqBody);
-        webSocket.send(reqBody);
+        reqBody.userId = userId;
+        
+        socket.emit("message", reqBody, roomId);
     };
 
 
     function close() {
-        document.removeEventListener("keydown", triggerSubmit);
-        if (webSocket) {
-            webSocket.close();
-        }
         handleClose();
     };
 
