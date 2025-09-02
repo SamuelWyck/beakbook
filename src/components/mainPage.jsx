@@ -2,6 +2,7 @@ import "../styles/mainPage.css";
 import { useState, useEffect } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import apiManager from "../utils/apiManager.js";
+import { io } from "socket.io-client";
 import LoadingPage from "./loadingPage.jsx";
 import ChatRoom from "./chatRoom.jsx";
 import eleFromPoint from "../utils/eleFromPoint.js";
@@ -15,6 +16,7 @@ function MainPage() {
     const [userData, setUserData] = useState(null);
     const [roomId, setRoomId] = useState(null);
     const [showingChat, setShowingChat] = useState(false);
+    const [socket, setSocket] = useState(null);
 
 
     useEffect(function() {
@@ -28,6 +30,8 @@ function MainPage() {
             }
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
+            const socket = io(apiManager.getSocketUrl());
+            setSocket(socket);
         });
     }, []);
 
@@ -40,12 +44,14 @@ function MainPage() {
         const roomId = target.dataset.chatid;
         setRoomId(roomId);
         setShowingChat(true);
+        socket.emit("join-room", roomId);
     };
 
 
     function handleClose() {
         setRoomId(null);
         setShowingChat(false);
+        socket.emit("leave-room", roomId);
     };
 
 
@@ -76,6 +82,7 @@ function MainPage() {
                 roomId={roomId} 
                 handleClose={handleClose}
                 userId={userData.user.id}
+                socket={socket}
             />
             }
         </div>
