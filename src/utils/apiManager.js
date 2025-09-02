@@ -84,8 +84,8 @@ class ApiManager {
     };
 
 
-    async getChatMessages(roomId) {
-        const url = `${this.#apiDomain}/messages/${roomId}`;
+    async getChatMessages(roomId, pageNum) {
+        const url = `${this.#apiDomain}/messages/${roomId}?pageNum=${pageNum}`;
         const options = {
             mode: "cors",
             method: "GET",
