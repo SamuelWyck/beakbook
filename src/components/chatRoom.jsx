@@ -47,7 +47,11 @@ function ChatRoom({roomId, handleClose, userId}) {
         apiManager.getChatMessages(roomId, 0)
         .then(function(res) {
             if (res.errors) {
-                //error popup
+                setTimeout(function() {
+                    showStatus("Cannot load messages");
+                }, 0);
+                setMessages([]);
+                return;
             }
             const messages = res.messages.reverse();
             setMessages(getMessageCards(messages));
@@ -91,20 +95,22 @@ function ChatRoom({roomId, handleClose, userId}) {
             return;
         }
 
+        showStatus("Loading messages...");
         pageNum.current += 1;
         fetchingMsgs.current = true;
         const res = await apiManager.getChatMessages(
             roomId, pageNum.current
         );
         if (res.errors) {
-            //error popup
+            showStatus("Cannot get messages");
+            return;
         }
 
         const messages = res.messages.reverse();
         moreMsgs.current = res.moreMsgs;
         const msgCards = getMessageCards(messages);
         setMessages(messages => [...msgCards, ...messages]);
-
+        hideStatus();
         fetchingMsgs.current = false;
         scrollHeight.current = target.scrollHeight;
     };
@@ -169,13 +175,33 @@ function ChatRoom({roomId, handleClose, userId}) {
 
     function close() {
         document.removeEventListener("keydown", triggerSubmit);
-        webSocket.close();
+        if (webSocket) {
+            webSocket.close();
+        }
         handleClose();
     };
 
 
+    function showStatus(msg) {
+        const statusModal = document.querySelector(
+            ".status-modal"
+        );
+        const para = statusModal.firstChild;
+        para.textContent = msg;
+        statusModal.classList.remove("hidden");
+    };
 
-    if (!roomId || !webSocket) {
+
+    function hideStatus() {
+        const statusModal = document.querySelector(
+            ".status-modal"
+        );
+        statusModal.classList.add("hidden");
+    };
+
+
+
+    if (!messages) {
         return (
             <div className="chat-messages">
                 <LoadingPage />
@@ -186,6 +212,12 @@ function ChatRoom({roomId, handleClose, userId}) {
 
     return (
         <div className="chat-messages">
+            <div className="status-modal hidden">
+                <p className="status-msg">Loading messages...</p>
+                <button onClick={hideStatus}>
+                    <img src={closeImg} alt="" />
+                </button>
+            </div>
             <div className="exit-wrapper">
                 <button onClick={close}>
                     <img src={closeImg} alt="close" />
