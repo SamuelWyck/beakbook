@@ -127,8 +127,8 @@ class ApiManager {
     };
 
 
-    getSocketUrl(roomId) {
-        return `${this.#apiDomain}/ws/${roomId}`;
+    getSocketUrl() {
+        return this.#apiDomain;
     };
 };
 
