@@ -1,6 +1,6 @@
 import "../styles/chatRoom.css";
 import closeImg from "../assets/close.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import apiManager from "../utils/apiManager.js";
 import MessageCard from "./messageCard.jsx";
 import LoadingPage from "./loadingPage.jsx";
@@ -8,6 +8,10 @@ import LoadingPage from "./loadingPage.jsx";
 
 
 function ChatRoom({roomId, handleClose, userId}) {
+    const pageNum = useRef(0);
+    const fetchingMsgs = useRef(false);
+    const moreMsgs = useRef(true);
+    const scrollHeight = useRef(null);
     const [messages, setMessages] = useState(null);
     const [webSocket, setWebSocket] = useState(null);
 
@@ -16,15 +20,23 @@ function ChatRoom({roomId, handleClose, userId}) {
         if (!messages) {
             return;
         }
-
+        
         const messageEle = document.querySelector(
             ".messages"
         );
+
+        if (scrollHeight.current) {
+            const scrollPos = messageEle.scrollHeight - scrollHeight.current;
+            scrollHeight.current = null;
+            messageEle.scrollBy({top: scrollPos, behavior: "instant"});
+            return;
+        }
+
         messageEle.scrollBy({
             top: messageEle.scrollHeight,
             behavior: "instant"
         });
-    }, [messages])
+    }, [messages]);
     
     
     useEffect(function() {
@@ -32,11 +44,14 @@ function ChatRoom({roomId, handleClose, userId}) {
             return;
         }
         
-        apiManager.getChatMessages(roomId).then(function(res) {
+        apiManager.getChatMessages(roomId, 0)
+        .then(function(res) {
             if (res.errors) {
                 //error popup
             }
-            setMessages(getMessageCards(res.messages));
+            const messages = res.messages.reverse();
+            setMessages(getMessageCards(messages));
+            moreMsgs.current = res.moreMsgs;
 
             const url = apiManager.getSocketUrl(roomId);
             const socket = new WebSocket(url);
@@ -61,6 +76,37 @@ function ChatRoom({roomId, handleClose, userId}) {
             userId={userId}
         />;
         setMessages(messages => [...messages, msgCard]);
+    };
+
+
+    async function handleScroll(event) {
+        const target = event.target;
+        if (target.scrollTop !== 0) {
+            return;
+        }
+        if (fetchingMsgs.current) {
+            return;
+        }
+        if (!moreMsgs.current) {
+            return;
+        }
+
+        pageNum.current += 1;
+        fetchingMsgs.current = true;
+        const res = await apiManager.getChatMessages(
+            roomId, pageNum.current
+        );
+        if (res.errors) {
+            //error popup
+        }
+
+        const messages = res.messages.reverse();
+        moreMsgs.current = res.moreMsgs;
+        const msgCards = getMessageCards(messages);
+        setMessages(messages => [...msgCards, ...messages]);
+
+        fetchingMsgs.current = false;
+        scrollHeight.current = target.scrollHeight;
     };
 
 
@@ -145,7 +191,7 @@ function ChatRoom({roomId, handleClose, userId}) {
                     <img src={closeImg} alt="close" />
                 </button>
             </div>
-            <div className="messages">
+            <div className="messages" onScrollEnd={handleScroll}>
                 {messages}
             </div>
             <form onSubmit={submitMsg}>
