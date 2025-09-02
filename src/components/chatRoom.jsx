@@ -230,6 +230,7 @@ function ChatRoom({roomId, handleClose, userId}) {
                 <textarea 
                     name="message" 
                     id="message"
+                    maxLength={10000}
                 ></textarea>
             </form>
         </div>
