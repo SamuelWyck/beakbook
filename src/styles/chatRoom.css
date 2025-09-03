@@ -47,7 +47,7 @@ textarea#message {
     outline: none;
     background-color: var(--background-color);
     border: 1px solid var(--foreground-color);
-    resize: vertical;
+    resize: none;
     color: var(--text-muted);
     field-sizing: content;
     word-break: break-word;
@@ -55,8 +55,10 @@ textarea#message {
     border-radius: 10px;
     font-family: "roboto";
     line-height: 1.5rem;
+    /* scrollbar-width: none; */
     scrollbar-width: thin;
-    scrollbar-color: var(--foreground-color) var(--background-color);
+    scrollbar-color: var(--foreground-color) #00000000;
+    scrollbar-gutter: stable;
 }
 
 .chat-messages form {
