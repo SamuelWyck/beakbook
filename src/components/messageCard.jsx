@@ -79,6 +79,36 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
     };
 
 
+    function toggleMenu(event) {
+        if (userId === msg.authorId) {
+            return;
+        }
+        event.stopPropagation();
+        let target = event.target;
+        if (target.matches(".options-modal")) {
+            return;
+        }
+        if (
+            !target.matches(".msg-author") || 
+            !target.matches(".msg-profile-wrapper")
+        ) {
+            target = target.parentElement;
+        }
+        
+        const msgId = target.dataset.id;
+        const menu = document.querySelector(
+            `.options-modal[data-id="${msgId}"]`
+        );
+        const otherMenu = document.querySelector(
+            ".options-modal:not(.hidden)"
+        );
+        if (otherMenu && otherMenu !== menu) {
+            otherMenu.classList.add("hidden");
+        }
+        menu.classList.toggle("hidden");
+    };
+
+
     if (deleted) {
         return null;
     }
@@ -86,7 +116,11 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
 
     return (
     <div className="msg-card">
-        <div className="msg-profile-wrapper">
+        <div 
+            className="msg-profile-wrapper" 
+            data-id={msg.id}
+            onClick={toggleMenu}
+        >
             <img 
                 className={
                     (msg.author.profileImgUrl) ? 
@@ -103,7 +137,17 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
         </div>
         <div className="msg-content">
             <div className="msg-info">
-                <div className="msg-author">
+                <div 
+                    className="msg-author" 
+                    data-id={msg.id}
+                    onClick={toggleMenu}
+                >
+                    <span 
+                        className="options-modal hidden" 
+                        data-id={msg.id}
+                    >
+                        <button>Add friend</button>
+                    </span>
                     <p className="msg-username">
                         {msg.author.username}
                     </p>
