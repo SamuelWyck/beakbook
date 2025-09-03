@@ -13,6 +13,7 @@ main.main-page {
     align-items: center;
     padding: 1rem;
     border-top: 1px solid var(--middleground-color);
+    position: relative;
 }
 
 .chat-rooms {
@@ -20,6 +21,10 @@ main.main-page {
     width: 100%;
     flex-direction: column;
     gap: .2rem;
+}
+
+.chat-rooms.hidden {
+    display: none;
 }
 
 .chat-btn {
@@ -58,6 +63,47 @@ main.main-page {
     width: 100%;
     height: 100%;
     position: relative;
+    background-color: var(--middleground-color);
+}
+
+.friends-pane {
+    position: absolute;
+    width: calc(100vw - 100%);
+    height: 100%;
+    background-color: var(--middleground-color);
+    left: 100%;
+    top: 0;
+    z-index: 2;
+}
+
+.pane-toggle {
+    display: none;
+    gap: 1rem;
+    padding: 1rem 0 2rem 0;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--middleground-color);
+    width: 100%;
+    justify-content: center;
+}
+
+.pane-toggle button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--middleground-color);
+    padding: .6rem 1.1rem;
+    color: var(--text-muted);
+    border-radius: 10px;
+}
+
+.pane-toggle button.active {
+    background-color: var(--foreground-color);
+}
+
+.pane-toggle button:not(.active):hover {
+    background-color: var(--highlight-color);
 }
 
 
@@ -69,5 +115,15 @@ main.main-page {
 
     main.main-page {
         grid-template-columns: 1fr min-content;
+    }
+
+    .friends-pane {
+        width: 100%;
+        position: static;
+        background-color: var(--background-color);
+    }
+
+    .pane-toggle {
+        display: flex;
     }
 }
