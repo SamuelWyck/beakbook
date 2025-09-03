@@ -40,6 +40,32 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
             behavior: "instant"
         });
     }, [messages]);
+
+
+    useEffect(function() {
+        function userMenuClick(event) {
+            const target = event.target;
+            if (target.matches(".options-modal")) {
+                return;
+            }
+
+            const modal = document.querySelector(
+                ".options-modal:not(.hidden)"
+            );
+            if (!modal) {
+                return;
+            }
+            modal.classList.add("hidden");
+        }
+
+        document.addEventListener("click", userMenuClick);
+
+        return function() {
+            document.removeEventListener(
+                "click", userMenuClick
+            );
+        };
+    }, []);
     
     
     useEffect(function() {
