@@ -5,6 +5,7 @@ import apiManager from "../utils/apiManager.js";
 import { io } from "socket.io-client";
 import LoadingPage from "./loadingPage.jsx";
 import ChatRoom from "./chatRoom.jsx";
+import FriendsList from "./friendsList.jsx";
 import eleFromPoint from "../utils/eleFromPoint.js";
 import logoImg from "../assets/logo.png";
 
@@ -37,6 +38,35 @@ function MainPage() {
     }, []);
 
 
+    useEffect(function() {
+        function handleResize() {
+            if (window.innerWidth > 600) {
+                const chatBtn = this.document.querySelector(
+                    ".chat-toggle"
+                );
+                chatBtn.click();
+                return;
+            }
+
+            const friendBtn = document.querySelector(
+                ".friend-toggle"
+            );
+            if (!friendBtn.matches(".active")) {
+                const friendsPane = document.querySelector(
+                    ".friends-pane"
+                );
+                friendsPane.classList.add("hidden");
+            }
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return function() {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+
     function showChat(event) {
         const target = eleFromPoint(
             event.clientX, event.clientY, ".chat-btn"
@@ -58,6 +88,42 @@ function MainPage() {
     };
 
 
+    function getClassName() {
+        if (window.innerWidth > 600) {
+            return "";
+        }
+        return " hidden";
+    };
+
+
+    function togglePanes(event) {
+        const target = event.target;
+        if (target.classList.contains("active")) {
+            return;
+        }
+
+        target.classList.add("active");
+
+        let showPaneSelector = ".friends-pane";
+        let hidePaneSelector = ".chat-rooms";
+        let otherBtnSelector = ".chat-toggle";
+        if (target.matches(".chat-toggle")) {
+            showPaneSelector = ".chat-rooms";
+            hidePaneSelector = ".friends-pane";
+            otherBtnSelector = ".friend-toggle";
+        }
+
+        const hidePane = document.querySelector(hidePaneSelector);
+        const showPane = document.querySelector(showPaneSelector);
+        const otherBtn = document.querySelector(otherBtnSelector);
+    
+        hidePane.classList.add("hidden");
+        showPane.classList.remove("hidden");
+        otherBtn.classList.remove("active");
+    };
+
+
+
     if (!userData) {
         return <LoadingPage />;
     }
@@ -66,6 +132,16 @@ function MainPage() {
     return (
     <main className="main-page">
         <div className="sidebar">
+            <div className="pane-toggle">
+                <button 
+                    className="chat-toggle active"
+                    onClick={togglePanes}
+                >Chats</button>
+                <button 
+                    className="friend-toggle"
+                    onClick={togglePanes}
+                >Friends</button>
+            </div>
             <div className="chat-rooms">
                 <button 
                     className="chat-btn" 
@@ -74,10 +150,22 @@ function MainPage() {
                     onClick={showChat}
                 >
                     <div className="img-wrapper">
-                        <img src={logoImg} alt="bird" className="global-img" />
+                        <img 
+                            src={logoImg} alt="bird" 
+                            className="global-img" 
+                        />
                     </div>
                     <p>{userData.globalChat.name}</p>
                 </button>
+            </div>
+            <div 
+                className={`friends-pane${getClassName()}`}
+            >
+                <FriendsList 
+                    socket={socket} 
+                    friends={userData.friends}
+                    friendRequests={userData.friendRequests} 
+                />
             </div>
         </div>
         <div className="main-pane">
