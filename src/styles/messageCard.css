@@ -28,11 +28,19 @@
     display: flex;
     align-items: end;
     gap: .5rem;
+    position: relative;
+    cursor: pointer;
+    --text-underline: none;
+}
+
+.msg-author:hover, .msg-author:focus {
+    --text-underline: underline;
 }
 
 .msg-profile-wrapper {
     max-width: 45px;
     display: flex;
+    cursor: pointer;
 }
 
 .msg-profile {
@@ -45,6 +53,38 @@
 
 .msg-username {
     font-weight: bold;
+    max-width: clamp(6ch, 4ch + 20vw, 50ch);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-decoration: var(--text-underline);
+}
+
+.options-modal {
+    position: absolute;
+    top: 0%;
+    left: 0;
+    right: 0;
+    width: fit-content;
+    margin: 0 auto;
+    background-color: var(--highlight-color);
+    padding: 1rem;
+    border-radius: 10px;
+    z-index: 1;
+}
+
+.options-modal button {
+    cursor: pointer;
+    background: none;
+    outline: none;
+    border: none;
+    font-size: 1rem;
+    font-weight: bold;
+    color: var(--background-color);
+}
+
+.options-modal button:hover, 
+.options-modal button:focus {
+    text-decoration: underline;
 }
 
 .msg-date {
@@ -99,4 +139,12 @@
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
     scrollbar-color: var(--foreground-color) #00000000;
+}
+
+
+
+@media only screen and (width <= 400px) {
+    .msg-username {
+        max-width: clamp(6ch, 4ch + 8vw, 10ch);
+    }
 }
