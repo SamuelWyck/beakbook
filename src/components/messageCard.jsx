@@ -10,7 +10,7 @@ import apiManager from "../utils/apiManager.js";
 
 
 
-function MessageCard({msg, userId}) {
+function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
@@ -46,25 +46,33 @@ function MessageCard({msg, userId}) {
         };
         reqBody = JSON.stringify(reqBody);
 
-        const res = await apiManager.editMessage(reqBody, msg.id);
+        const res = await apiManager.editMessage(
+            reqBody, msg.id
+        );
         if (res.errors) {
-            console.log(res.errors);
+            statusCb("Unable to edit message");
             return;
         }
 
         msg.text = text;
         toggleEdit();
+        editCb(msg);
     };
 
 
     async function handleDelete() {
         const res = await apiManager.deleteMessage(msg.id);
         if (res.errors) {
-            console.log(res.errors);
+            statusCb("Unable to delete message");
             return;
         }
 
         setDeleted(true);
+        deleteCb({
+            id: msg.id, 
+            authorId: userId, 
+            roomId: msg.chatRoomId
+        });
     };
 
 
