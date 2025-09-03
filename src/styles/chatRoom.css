@@ -6,7 +6,7 @@
     height: 100%;
     background-color: var(--middleground-color);
     display: grid;
-    grid-template-rows: min-content 1fr max-content;
+    grid-template-rows: min-content 1fr fit-content;
 }
 
 .exit-wrapper {
@@ -40,9 +40,9 @@
 }
 
 textarea#message {
-    height: 4rem;
     width: 100%;
-    min-height: 4rem;
+    min-height: 3rem;
+    max-height: 17.1rem;
     font-size: 1rem;
     outline: none;
     background-color: var(--background-color);
