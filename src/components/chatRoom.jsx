@@ -7,7 +7,7 @@ import LoadingPage from "./loadingPage.jsx";
 
 
 
-function ChatRoom({roomId, handleClose, userId, socket}) {
+function ChatRoom({roomId, handleClose, userId, socket, name}) {
     const pageNum = useRef(0);
     const fetchingMsgs = useRef(false);
     const moreMsgs = useRef(true);
@@ -298,6 +298,7 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
                     name="message" 
                     id="message"
                     maxLength={10000}
+                    placeholder={`Message @${name}`}
                 ></textarea>
             </form>
         </div>
