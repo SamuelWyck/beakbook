@@ -61,6 +61,11 @@ textarea#message {
     scrollbar-gutter: stable;
 }
 
+textarea#message::placeholder {
+    color: var(--text-muted);
+    opacity: .5;
+}
+
 .chat-messages form {
     margin: 1rem;
     overflow: hidden;
