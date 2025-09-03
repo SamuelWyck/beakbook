@@ -1,5 +1,5 @@
 import "../styles/mainPage.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import apiManager from "../utils/apiManager.js";
 import { io } from "socket.io-client";
@@ -15,6 +15,7 @@ function MainPage() {
     const headerRef = useOutletContext();
     const [userData, setUserData] = useState(null);
     const [roomId, setRoomId] = useState(null);
+    const chatName = useRef(null);
     const [showingChat, setShowingChat] = useState(false);
     const [socket, setSocket] = useState(null);
 
@@ -42,6 +43,8 @@ function MainPage() {
         );
         
         const roomId = target.dataset.chatid;
+        const name = target.dataset.chatname;
+        chatName.current = name;
         setRoomId(roomId);
         setShowingChat(true);
         socket.emit("join-room", roomId);
@@ -67,6 +70,7 @@ function MainPage() {
                 <button 
                     className="chat-btn" 
                     data-chatid={userData.globalChat.id}
+                    data-chatname={userData.globalChat.name}
                     onClick={showChat}
                 >
                     <div className="img-wrapper">
@@ -83,6 +87,7 @@ function MainPage() {
                 handleClose={handleClose}
                 userId={userData.user.id}
                 socket={socket}
+                name={chatName.current}
             />
             }
         </div>
