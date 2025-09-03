@@ -25,7 +25,8 @@ header > a {
 }
 
 header .logo-wrapper {
-    max-width: clamp(45px, 40px + 2vw, 50px)
+    /* max-width: clamp(45px, 40px + 2vw, 50px); */
+    max-width: 45px;
 }
 
 .logo {
@@ -115,8 +116,8 @@ header nav button img {
     header {
         padding: .1rem 0;
     }
-
+/* 
     header .logo-wrapper {
         max-width: 45px;
-    }
+    } */
 }
