@@ -113,3 +113,11 @@ textarea#message::placeholder {
     width: 20px;
     filter: var(--filter);
 }
+
+
+
+@media only screen and (width <= 400px) {
+    .messages {
+        padding: .5rem 0;
+    }
+}
