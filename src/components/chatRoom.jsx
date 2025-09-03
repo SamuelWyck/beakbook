@@ -12,6 +12,7 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
     const fetchingMsgs = useRef(false);
     const moreMsgs = useRef(true);
     const scrollHeight = useRef(null);
+    const cancelScroll = useRef(false);
     const [messages, setMessages] = useState(null);
 
 
@@ -19,20 +20,23 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
         if (!messages) {
             return;
         }
+        if (cancelScroll.current) {
+            cancelScroll.current = false;
+            return;
+        }
         
         const messageEle = document.querySelector(
             ".messages"
         );
 
+        let scrollPos = messageEle.scrollHeight;
         if (scrollHeight.current) {
-            const scrollPos = messageEle.scrollHeight - scrollHeight.current;
+            scrollPos -= scrollHeight.current;
             scrollHeight.current = null;
-            messageEle.scrollBy({top: scrollPos, behavior: "instant"});
-            return;
         }
 
         messageEle.scrollBy({
-            top: messageEle.scrollHeight,
+            top: scrollPos,
             behavior: "instant"
         });
     }, [messages]);
@@ -74,18 +78,63 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
                 cleanForm();
             }
 
-            const msgCard = <MessageCard
-                key={message.id}
-                msg={message}
-                userId={userId}
-            />;
+            const msgCard = getMessageCards(message);
             setMessages(messages => [...messages, msgCard]);
+        });
+
+        socket.on("edit-msg", function(msg) {
+            if (msg.authorId === userId) {
+                return;
+            }
+
+            const msgCard = getMessageCards(msg);
+            setMessages((messages) => {
+                for (let i = 0; i < messages.length; i += 1) {
+                    const message = messages[i];
+                    if (message.props.msg.id === msg.id) {
+                        messages[i] = msgCard;
+                        break;
+                    }
+                }
+                return [...messages];
+            });
+            cancelScroll.current = true;
+        });
+
+        socket.on("delete-msg", function(msgInfo) {
+            if (msgInfo.authorId === userId) {
+                return;
+            }
+
+            setMessages((messages) => {
+                const savedMsgs = [];
+                for (let message of messages) {
+                    if (message.props.msg.id === msgInfo.id) {
+                        continue;
+                    }
+                    savedMsgs.push(message);
+                }
+                return savedMsgs;
+            });
+            cancelScroll.current = true;
         });
 
         return function() {
             socket.off("message");
+            socket.off("edit-msg");
+            socket.off("delete-msg");
         };
     }, [socket, userId]);
+
+
+    function broadcastEdit(message) {
+        socket.emit("edit-msg", message);
+    };
+
+
+    function broadcastDelete(messageId) {
+        socket.emit("delete-msg", messageId);
+    };
 
 
     async function handleScroll(event) {
@@ -131,6 +180,18 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
 
 
     function getMessageCards(messages) {
+        if (!Array.isArray(messages)) {
+            const msgCard = <MessageCard
+                key={messages.id}
+                msg={messages}
+                userId={userId}
+                editCb={broadcastEdit}
+                deleteCb={broadcastDelete}
+                statusCb={showStatus}
+            />;
+            return msgCard;
+        }
+
         const msgCards = [];
         for (let message of messages) {
             msgCards.push(
@@ -138,6 +199,9 @@ function ChatRoom({roomId, handleClose, userId, socket}) {
                     key={message.id}
                     msg={message}
                     userId={userId}
+                    editCb={broadcastEdit}
+                    deleteCb={broadcastDelete}
+                    statusCb={showStatus}
                 />
             );
         }
