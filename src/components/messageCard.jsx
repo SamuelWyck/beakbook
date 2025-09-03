@@ -19,6 +19,9 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
 
     function toggleEdit() {
         setEditing(!editing);
+        if (editing) {
+            setTextValue(msg.text);
+        }
     };
 
 
