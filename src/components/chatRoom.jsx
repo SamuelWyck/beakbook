@@ -162,6 +162,11 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
         socket.emit("delete-msg", messageId);
     };
 
+    function broadcastFriendRequst(request, roomId) {
+        socket.emit("friend-request", request, roomId);
+        socket.emit("sent-request", request, userId);
+    };
+
 
     async function handleScroll(event) {
         const target = event.target;
@@ -214,6 +219,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                 editCb={broadcastEdit}
                 deleteCb={broadcastDelete}
                 statusCb={showStatus}
+                requestCb={broadcastFriendRequst}
             />;
             return msgCard;
         }
@@ -228,6 +234,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                     editCb={broadcastEdit}
                     deleteCb={broadcastDelete}
                     statusCb={showStatus}
+                    requestCb={broadcastFriendRequst}
                 />
             );
         }
