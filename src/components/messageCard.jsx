@@ -10,7 +10,8 @@ import apiManager from "../utils/apiManager.js";
 
 
 
-function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
+function MessageCard(
+    {msg, userId, editCb, deleteCb, statusCb, requestCb}) {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
@@ -109,6 +110,26 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
     };
 
 
+    async function sendFriendRequest() {
+        let reqBody = {
+            receivingUserId: msg.authorId
+        };
+        reqBody = JSON.stringify(reqBody);
+
+        const res = await apiManager.sendFriendRequest(
+            reqBody
+        );
+        if (res.errors) {
+            statusCb("Unable to add friend");
+            return;
+        }
+        requestCb(
+            res.friendRequest, 
+            res.friendRequest.receivingUserId
+        );
+    };
+
+
     if (deleted) {
         return null;
     }
@@ -146,7 +167,9 @@ function MessageCard({msg, userId, editCb, deleteCb, statusCb}) {
                         className="options-modal hidden" 
                         data-id={msg.id}
                     >
-                        <button>Add friend</button>
+                        <button
+                            onClick={sendFriendRequest}
+                        >Add friend</button>
                     </span>
                     <p className="msg-username">
                         {msg.author.username}
