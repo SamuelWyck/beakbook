@@ -1,0 +1,84 @@
+.friend-request {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    gap: .5rem;
+}
+
+.friend-request:hover {
+    background-color: var(--middleground-color);
+}
+
+.request-profile-wrapper {
+    max-width: 40px;
+    max-height: 40px;
+    display: flex;
+}
+
+.request-profile-wrapper img {
+    width: 100%;
+}
+
+.request-profile-wrapper .default {
+    filter: var(--highlight-img-filter);
+}
+
+.request-user {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    color: var(--text-muted);
+}
+
+.request-username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    max-width: clamp(10ch, 6ch + 30vw, 40ch);
+}
+
+
+.request-options {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.request-options button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+    width: 27px;
+    --filter: var(--foreground-img-filter);
+    display: flex;
+    border-radius: 50%;
+    padding: .1rem;
+}
+
+.request-options button:hover,
+.request-options button:focus {
+    --filter: var(--highlight-img-filter);
+    background-color: var(--background-color);
+}
+
+.request-options button img {
+    filter: var(--filter);
+}
+
+
+
+@media only screen and (width > 600px) {
+    .request-options button:hover,
+    .request-options button:focus {
+        --filter: var(--highlight-img-filter);
+        background-color: var(--middleground-color);
+    }
+
+    .friend-request:hover {
+        background-color: var(--background-color);
+    }
+}
