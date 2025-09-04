@@ -1,0 +1,12 @@
+.incoming-requests, .sent-requests {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    width: min(100%, 800px);
+    padding: .5rem;
+}
+
+.incoming-para, .sent-para {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+}
