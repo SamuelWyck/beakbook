@@ -32,7 +32,13 @@ function MainPage() {
             }
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
-            const socket = io(apiManager.getSocketUrl());
+            const socket = io(
+                apiManager.getSocketUrl(), {
+                    query: {
+                        userId: res.userData.user.id
+                    }
+                }
+            );
             setSocket(socket);
         });
     }, []);
@@ -40,11 +46,15 @@ function MainPage() {
 
     useEffect(function() {
         function handleResize() {
+            const friendsPane = document.querySelector(
+                ".friends-pane"
+            );
             if (window.innerWidth > 600) {
                 const chatBtn = this.document.querySelector(
                     ".chat-toggle"
                 );
                 chatBtn.click();
+                friendsPane.classList.remove("hidden");
                 return;
             }
 
@@ -52,9 +62,6 @@ function MainPage() {
                 ".friend-toggle"
             );
             if (!friendBtn.matches(".active")) {
-                const friendsPane = document.querySelector(
-                    ".friends-pane"
-                );
                 friendsPane.classList.add("hidden");
             }
         };
@@ -164,7 +171,8 @@ function MainPage() {
                 <FriendsList 
                     socket={socket} 
                     friends={userData.friends}
-                    friendRequests={userData.friendRequests} 
+                    friendRequests={userData.friendRequests}
+                    sentReqs={userData.sentRequests} 
                 />
             </div>
         </div>
