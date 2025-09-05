@@ -92,9 +92,6 @@ function MessageCard(
 
 
     function toggleMenu(event) {
-        // if (friendsRef.current.has(msg.authorId)) {
-        //     return;
-        // }
         if (userId === msg.authorId) {
             return;
         }
