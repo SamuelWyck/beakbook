@@ -80,6 +80,7 @@
     font-size: 1rem;
     font-weight: bold;
     color: var(--background-color);
+    width: max-content;
 }
 
 .options-modal button:hover, 
