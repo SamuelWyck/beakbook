@@ -1,4 +1,4 @@
-.incoming-requests, .sent-requests {
+.incoming-requests, .sent-requests, .friends-list {
     display: flex;
     flex-direction: column;
     gap: .5rem;
@@ -6,7 +6,44 @@
     padding: .5rem;
 }
 
-.incoming-para, .sent-para {
+.incoming-para, .sent-para, .friends-para {
     color: var(--text-muted);
     font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: .02rem;
+}
+
+.status-modal-2 {
+    position: absolute;
+    top: 3%;
+    left: 1rem;
+    background-color: var(--foreground-color);
+    width: 75%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .2rem .2rem .2rem .5rem;
+    color: var(--background-color);
+}
+
+.status-modal-2.hidden {
+    display: none;
+}
+
+.status-modal-2 button {
+    --filter: var(--background-img-filter);
+    display: flex;
+    background: none;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.status-modal-2 button:hover {
+    --filter: var(--middleground-img-filter)
+}
+
+.status-modal-2 button img {
+    width: 20px;
+    filter: var(--filter);
 }
