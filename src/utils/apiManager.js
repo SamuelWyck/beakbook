@@ -189,6 +189,19 @@ class ApiManager {
     };
 
 
+    async getChatUsers(roomId) {
+        const url = `${this.#apiDomain}/chat/users/${roomId}`;
+        const options = {
+            mode: "cors",
+            method: "GET",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
