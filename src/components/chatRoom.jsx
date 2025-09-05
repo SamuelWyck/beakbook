@@ -220,6 +220,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                 deleteCb={broadcastDelete}
                 statusCb={showStatus}
                 requestCb={broadcastFriendRequst}
+                closeCb={handleClose}
             />;
             return msgCard;
         }
@@ -235,6 +236,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                     deleteCb={broadcastDelete}
                     statusCb={showStatus}
                     requestCb={broadcastFriendRequst}
+                    closeCb={handleClose}
                 />
             );
         }
