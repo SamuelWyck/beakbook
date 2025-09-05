@@ -158,6 +158,37 @@ class ApiManager {
     };
 
 
+    async addFriend(reqBody) {
+        const url = `${this.#apiDomain}/friends/add`;
+        const options = {
+            mode: "cors",
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
+    async removeFriend(relationId) {
+        const endPoint = `/delete/${relationId}`;
+        const url = `${this.#apiDomain}/friends${endPoint}`;
+        const options = {
+            mode: "cors",
+            method: "DELETE",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
