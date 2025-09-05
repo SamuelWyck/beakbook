@@ -118,6 +118,10 @@ function MainPage() {
             showPaneSelector = ".chat-rooms";
             hidePaneSelector = ".friends-pane";
             otherBtnSelector = ".friend-toggle";
+            const status2 = document.querySelector(
+                ".status-modal-2"
+            );
+            status2.classList.add("hidden");
         }
 
         const hidePane = document.querySelector(hidePaneSelector);
@@ -171,6 +175,7 @@ function MainPage() {
                 <FriendsList 
                     socket={socket} 
                     friends={userData.friends}
+                    friendShips={userData.friendShips}
                     friendRequests={userData.friendRequests}
                     sentReqs={userData.sentRequests} 
                 />
