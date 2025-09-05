@@ -1,0 +1,84 @@
+.friend {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    gap: .5rem;
+}
+
+.friend:hover {
+    background-color: var(--middleground-color);
+}
+
+.friend-profile-wrapper {
+    max-width: 40px;
+    max-height: 40px;
+    display: flex;
+}
+
+.friend-profile-wrapper img {
+    width: 100%;
+}
+
+.friend-profile-wrapper .default {
+    filter: var(--highlight-img-filter);
+}
+
+.friend-user {
+    display: flex;
+    align-items: center;
+    gap: .2rem;
+    color: var(--text-muted);
+}
+
+.friend-username {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    max-width: clamp(10ch, 6ch + 30vw, 40ch);
+}
+
+
+.friend-options {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+.friend-options button {
+    cursor: pointer;
+    outline: none;
+    border: none;
+    background: none;
+    width: 27px;
+    --filter: var(--foreground-img-filter);
+    display: flex;
+    border-radius: 50%;
+    padding: .1rem;
+}
+
+.friend-options button:hover,
+.friend-options button:focus {
+    --filter: var(--highlight-img-filter);
+    background-color: var(--background-color);
+}
+
+.friend-options button img {
+    filter: var(--filter);
+}
+
+
+
+@media only screen and (width > 600px) {
+    .friend-options button:hover,
+    .friend-options button:focus {
+        --filter: var(--highlight-img-filter);
+        background-color: var(--middleground-color);
+    }
+
+    .friend-request:hover {
+        background-color: var(--background-color);
+    }
+}
