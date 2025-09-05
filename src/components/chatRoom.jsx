@@ -4,6 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import apiManager from "../utils/apiManager.js";
 import MessageCard from "./messageCard.jsx";
 import LoadingPage from "./loadingPage.jsx";
+import ChatUserCard from "./chatUserCard.jsx";
+import usersImg from "../assets/users.svg";
 
 
 
@@ -14,6 +16,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     const scrollHeight = useRef(null);
     const cancelScroll = useRef(false);
     const [messages, setMessages] = useState(null);
+    const [users, setUsers] = useState(null);
 
 
     useEffect(function() {
@@ -72,20 +75,46 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
         if (!roomId) {
             return;
         }
-        
-        apiManager.getChatMessages(roomId, 0)
-        .then(function(res) {
-            if (res.errors) {
+        Promise.all([
+            apiManager.getChatMessages(roomId, 0),
+            apiManager.getChatUsers(roomId)
+        ]).then(function(res) {
+            const [msgs, users] = res;
+            if (msgs.errors) {
                 setTimeout(function() {
                     showStatus("Cannot load messages");
                 }, 0);
                 setMessages([]);
+                setUsers([]);
                 return;
             }
-            const messages = res.messages.reverse();
+            if (users.errors) {
+                setTimeout(function() {
+                    showStatus("Cannot load users");
+                }, 0);
+                setMessages([]);
+                setUsers([]);
+                return;
+            }
+
+            const messages = msgs.messages.reverse();
             setMessages(getMessageCards(messages));
-            moreMsgs.current = res.moreMsgs;
+            moreMsgs.current = msgs.moreMsgs;
+            setUsers(getUserCards(users.chatUsers));
         });
+        // apiManager.getChatMessages(roomId, 0)
+        // .then(function(res) {
+        //     if (res.errors) {
+        //         setTimeout(function() {
+        //             showStatus("Cannot load messages");
+        //         }, 0);
+        //         setMessages([]);
+        //         return;
+        //     }
+        //     const messages = res.messages.reverse();
+        //     setMessages(getMessageCards(messages));
+        //     moreMsgs.current = res.moreMsgs;
+        // });
 
 
         document.addEventListener("keydown", triggerSubmit);
@@ -210,6 +239,34 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     };
 
 
+    function getUserCards(users) {
+        if (!Array.isArray(users)) {
+            const card = <ChatUserCard
+                key={users.id}
+                user={users}
+                userId={userId}
+                closeCb={close}
+                requestCb={broadcastFriendRequst}
+            />
+            return card;
+        }
+
+        const cards = [];
+        for (let user of users) {
+            cards.push(
+                <ChatUserCard
+                    key={user.id}
+                    user={user}
+                    userId={userId}
+                    closeCb={close}
+                    requestCb={broadcastFriendRequst}
+                />
+            );
+        }
+        return cards;
+    };
+
+
     function getMessageCards(messages) {
         if (!Array.isArray(messages)) {
             const msgCard = <MessageCard
@@ -302,6 +359,14 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     };
 
 
+    function toggleChatUsers() {
+        const chatUsers = document.querySelector(
+            ".chat-users-modal"
+        );
+        chatUsers.classList.toggle("hidden");
+    };
+
+
 
     if (!messages) {
         return (
@@ -314,6 +379,16 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
 
     return (
         <div className="chat-messages">
+            <div className="chat-users-modal hidden">
+                <div className="exit-wrapper">
+                    <button onClick={toggleChatUsers}>
+                        <img src={closeImg} alt="close" />
+                    </button>
+                </div>
+                <div className="chat-users">
+                    {users}
+                </div>
+            </div>
             <div className="status-modal hidden">
                 <p className="status-msg">Loading messages...</p>
                 <button onClick={hideStatus}>
@@ -321,6 +396,13 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                 </button>
             </div>
             <div className="exit-wrapper">
+                <div className="users-wrapper">
+                    <button 
+                        onClick={toggleChatUsers}
+                    >
+                    <img src={usersImg} alt="" /> 
+                    </button>
+                </div>
                 <button onClick={close}>
                     <img src={closeImg} alt="close" />
                 </button>
