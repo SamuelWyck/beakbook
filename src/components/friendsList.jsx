@@ -1,5 +1,6 @@
 import "../styles/friendsList.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { FriendsContext } from "../utils/context.js";
 import RequestCard from "./requestCard.jsx";
 import FriendCard from "./friendCard.jsx";
 import closeImg from "../assets/close.svg";
@@ -7,7 +8,14 @@ import closeImg from "../assets/close.svg";
 
 
 function FriendsList(
-    {socket, friends, friendShips, friendRequests, sentReqs}) {
+    {
+        socket, 
+        friends, 
+        friendShips, 
+        friendRequests, 
+        sentReqs, 
+        userId
+    }) {
 
     const [requests, setRequests] = useState(
         getRequestCards(friendRequests, false)
@@ -18,6 +26,7 @@ function FriendsList(
     const [friendCards, setFriendCards] = useState(
         initFriendCards(friends, friendShips)
     );
+    const friendsRef = useContext(FriendsContext);
 
 
     useEffect(function() {
@@ -26,6 +35,7 @@ function FriendsList(
             setRequests(cards => {
                 return [card, ...cards];
             });
+            friendsRef.current.add(request.requestingUserId);
         });
 
         socket.on("sent-request", function(request) {
@@ -46,6 +56,7 @@ function FriendsList(
                 }
                 return savedCards;
             });
+            friendsRef.current.delete(request.requestingUserId);
         });
 
         socket.on("del-sent-request", function(request) {
@@ -59,6 +70,7 @@ function FriendsList(
                 }
                 return savedCards;
             });
+            friendsRef.current.delete(request.receivingUserId);
         });
 
         socket.on("add-friend", function(friendInfo) {
@@ -69,9 +81,10 @@ function FriendsList(
                 );
                 return [card, ...cards];
             });
+            friendsRef.current.add(friendInfo.friend.id);
         });
 
-        socket.on("del-friend", function(relationId) {
+        socket.on("del-friend", function(relationId, friendId) {
             setFriendCards(cards => {
                 const savedCards = [];
                 for (let card of cards) {
@@ -82,6 +95,7 @@ function FriendsList(
                 }
                 return savedCards;
             });
+            friendsRef.current.delete(friendId);
         });
 
         return function() {
@@ -187,13 +201,16 @@ function FriendsList(
             return savedCards;
         });
 
+        
         if (sent) {
+            friendsRef.current.delete(request.receivingUserId);
             socket.emit(
                 "del-request", 
                 request, 
                 request.receivingUserId
             );
         } else {
+            friendsRef.current.delete(request.requestingUserId);
             socket.emit(
                 "del-sent-request",
                 request,
@@ -215,7 +232,8 @@ function FriendsList(
             return savedCards;
         });
 
-        socket.emit("del-friend", relationId, roomId);
+        friendsRef.current.delete(roomId);
+        socket.emit("del-friend", relationId, userId, roomId);
     };
 
 
@@ -227,6 +245,8 @@ function FriendsList(
             );
             return [card, ...cards];
         });
+
+        friendsRef.current.add(friendLink.friendId);
 
         socket.emit(
             "add-friend", 
