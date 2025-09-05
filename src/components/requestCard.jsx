@@ -8,7 +8,9 @@ import apiManager from "../utils/apiManager.js";
 
 
 
-function RequestCard({request, deleteCb, sent}) {
+function RequestCard(
+    {request, deleteCb, sent, addCb, statusCb}) {
+
     const [showIgnore, setShowIgnore] = useState(false);
 
 
@@ -22,10 +24,28 @@ function RequestCard({request, deleteCb, sent}) {
             request.id
         );
         if (res.errors) {
+            statusCb("Error ignoring request");
             return;
         }
 
         deleteCb(request, sent);
+    };
+
+
+    async function addFriend() {
+        let reqBody = {
+            requestId: request.id
+        };
+        reqBody = JSON.stringify(reqBody);
+
+        const res = await apiManager.addFriend(reqBody);
+        if (res.errors) {
+            statusCb("Error adding friend");
+            return;
+        }
+
+        deleteCb(request, sent);
+        addCb(res.friendLink, request.requestingUserId);
     };
 
 
@@ -63,7 +83,7 @@ function RequestCard({request, deleteCb, sent}) {
                     <img src={closeImg} alt="" />
                 </button>
                 {sent ||
-                <button>
+                <button onClick={addFriend}>
                     <img src={yesImg} alt="" />
                 </button>
                 }
