@@ -1,0 +1,37 @@
+.chat-user {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: .5rem 1rem;
+    background-color: var(--foreground-color);
+    position: relative;
+}
+
+.chat-user:hover, .chat-user:focus {
+    background-color: var(--middleground-color);
+}
+
+.chat-user-profile-wrapper {
+    width: 40px;
+    display: flex;
+    flex-basis: 40px;
+    flex-shrink: 0;
+}
+
+.chat-user-profile-wrapper img {
+    width: 100%;
+}
+
+.chat-user-profile-wrapper img.default {
+    filter: var(--background-img-filter);
+}
+
+.chat-user-username {
+    color: var(--text-muted);
+    font-weight: bold;
+    max-width: clamp(15ch, 10ch + 58vw, 50ch);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
