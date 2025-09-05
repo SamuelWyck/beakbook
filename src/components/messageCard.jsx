@@ -5,7 +5,8 @@ import deleteImg from "../assets/delete.svg";
 import editImg from "../assets/edit.svg";
 import closeImg from "../assets/close.svg";
 import saveImg from "../assets/save.svg";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { FriendsContext } from "../utils/context.js";
 import apiManager from "../utils/apiManager.js";
 
 
@@ -16,6 +17,7 @@ function MessageCard(
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const [textValue, setTextValue] = useState(msg.text);
+    const friendsRef = useContext(FriendsContext);
 
 
     function toggleEdit() {
@@ -81,6 +83,9 @@ function MessageCard(
 
 
     function toggleMenu(event) {
+        if (friendsRef.current.has(msg.authorId)) {
+            return;
+        }
         if (userId === msg.authorId) {
             return;
         }
@@ -123,6 +128,7 @@ function MessageCard(
             statusCb("Unable to add friend");
             return;
         }
+        friendsRef.current.add(msg.authorId);
         requestCb(
             res.friendRequest, 
             res.friendRequest.receivingUserId
