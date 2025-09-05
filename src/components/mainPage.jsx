@@ -1,5 +1,6 @@
 import "../styles/mainPage.css";
 import { useState, useEffect, useRef } from "react";
+import {FriendsContext} from "../utils/context.js";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import apiManager from "../utils/apiManager.js";
 import { io } from "socket.io-client";
@@ -14,6 +15,7 @@ import logoImg from "../assets/logo.png";
 function MainPage() {
     const navigate = useNavigate();
     const headerRef = useOutletContext();
+    const friendsRef = useRef(new Set());
     const [userData, setUserData] = useState(null);
     const [roomId, setRoomId] = useState(null);
     const chatName = useRef(null);
@@ -32,6 +34,7 @@ function MainPage() {
             }
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
+            friendsRef.current = getFriendsSet(res.userData);
             const socket = io(
                 apiManager.getSocketUrl(), {
                     query: {
@@ -72,6 +75,26 @@ function MainPage() {
             window.removeEventListener("resize", handleResize);
         };
     }, []);
+
+
+    function getFriendsSet(userData) {
+        const friendSet = new Set();
+
+        for (let relation of userData.friends) {
+            friendSet.add(relation.friendId);
+        }
+        for (let relation of userData.friendShips) {
+            friendSet.add(relation.userId);
+        }
+        for (let relation of userData.friendRequests) {
+            friendSet.add(relation.requestingUserId);
+        }
+        for (let relation of userData.sentRequests) {
+            friendSet.add(relation.receivingUserId);
+        }
+        
+        return friendSet;
+    };
 
 
     function showChat(event) {
@@ -141,6 +164,7 @@ function MainPage() {
 
 
     return (
+    <FriendsContext value={friendsRef}>
     <main className="main-page">
         <div className="sidebar">
             <div className="pane-toggle">
@@ -178,6 +202,7 @@ function MainPage() {
                     friendShips={userData.friendShips}
                     friendRequests={userData.friendRequests}
                     sentReqs={userData.sentRequests} 
+                    userId={userData.user.id}
                 />
             </div>
         </div>
@@ -193,6 +218,7 @@ function MainPage() {
             }
         </div>
     </main>
+    </FriendsContext>
     );
 };
 
