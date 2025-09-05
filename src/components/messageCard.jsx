@@ -12,11 +12,20 @@ import apiManager from "../utils/apiManager.js";
 
 
 function MessageCard(
-    {msg, userId, editCb, deleteCb, statusCb, requestCb}) {
+    {
+        msg, 
+        userId, 
+        editCb, 
+        deleteCb, 
+        statusCb, 
+        requestCb, 
+        closeCb
+    }) {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
     const [deleted, setDeleted] = useState(false);
     const [textValue, setTextValue] = useState(msg.text);
+    const [render, setRender] = useState(false);
     const friendsRef = useContext(FriendsContext);
 
 
@@ -83,9 +92,9 @@ function MessageCard(
 
 
     function toggleMenu(event) {
-        if (friendsRef.current.has(msg.authorId)) {
-            return;
-        }
+        // if (friendsRef.current.has(msg.authorId)) {
+        //     return;
+        // }
         if (userId === msg.authorId) {
             return;
         }
@@ -129,10 +138,27 @@ function MessageCard(
             return;
         }
         friendsRef.current.add(msg.authorId);
+        setRender(!render);
         requestCb(
             res.friendRequest, 
             res.friendRequest.receivingUserId
         );
+    };
+
+
+    function isFriend() {
+        return friendsRef.current.has(msg.authorId);
+    };
+
+
+    function goToFriendList() {
+        if (window.innerWidth <= 600) {
+            const friendBtn = document.querySelector(
+                ".friend-toggle"
+            );
+            friendBtn.click();
+        }
+        closeCb();
     };
 
 
@@ -173,9 +199,15 @@ function MessageCard(
                         className="options-modal hidden" 
                         data-id={msg.id}
                     >
+                        {(!isFriend()) ?
                         <button
                             onClick={sendFriendRequest}
                         >Add friend</button>
+                        :
+                        <button
+                            onClick={goToFriendList}
+                        >Remove friend</button>
+                        }
                     </span>
                     <p className="msg-username">
                         {msg.author.username}
