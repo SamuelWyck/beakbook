@@ -6,6 +6,7 @@ import MessageCard from "./messageCard.jsx";
 import LoadingPage from "./loadingPage.jsx";
 import ChatUserCard from "./chatUserCard.jsx";
 import usersImg from "../assets/users.svg";
+import ChatUsersModal from "./chatUsersModal.jsx";
 
 
 
@@ -190,6 +191,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     function broadcastDelete(messageId) {
         socket.emit("delete-msg", messageId);
     };
+
 
     function broadcastFriendRequst(request, roomId) {
         socket.emit("friend-request", request, roomId);
