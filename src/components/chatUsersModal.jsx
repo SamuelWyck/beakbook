@@ -1,6 +1,6 @@
 import "../styles/chatUsersModal.css";
 import apiManager from "../utils/apiManager.js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ChatUserCard from "./chatUserCard.jsx";
 import closeImg from "../assets/close.svg";
 import LoadingPage from "./loadingPage.jsx";
@@ -18,10 +18,13 @@ function ChatUsersModal(
         chatCloseCb
     }) {
     const [chatUsers, setChatUsers] = useState(null);
+    const moreUsers = useRef(null);
+    const pageNum = useRef(0);
+    const fetchingUsers = useRef(false);
 
 
     useEffect(function() {
-        apiManager.getChatUsers(roomId).then(function(res) {
+        apiManager.getChatUsers(roomId, 0).then(function(res) {
             if (res.errors) {
                 showStatus("Unable to get users");
                 setChatUsers([]);
@@ -29,6 +32,7 @@ function ChatUsersModal(
             }
 
             setChatUsers(getUserCards(res.chatUsers));
+            moreUsers.current = res.moreUsers;
         });
     }, []);
 
@@ -56,9 +60,43 @@ function ChatUsersModal(
     };
 
 
+    async function handleScroll(event) {
+        const target = event.target;
+        const scrollPos = target.scrollTop + target.clientHeight;
+        if (scrollPos !== target.scrollHeight) {
+            return;
+        }
+        if (fetchingUsers.current) {
+            return;
+        }
+        if (!moreUsers.current) {
+            return;
+        }
+
+        fetchingUsers.current = true;
+        pageNum.current += 1;
+        showStatus("Loading users...");
+        const res = await apiManager.getChatUsers(
+            roomId, pageNum.current
+        );
+        if (res.errors) {
+            showStatus("Unable to load users");
+            return;
+        }
+
+        setChatUsers(users => {
+            const newUsers = getUserCards(res.chatUsers);
+            return [...users, ...newUsers];
+        });
+        hideStatus();
+        fetchingUsers.current = false;
+        moreUsers.current = res.moreUsers;
+    };
+
+
     if (!chatUsers) {
         return (
-            <div className="chat-users-modal hidden">
+            <div className="chat-users-modal">
                 <div className="exit-wrapper">
                     <button onClick={closeCb}>
                         <img src={closeImg} alt="close" />
@@ -71,13 +109,16 @@ function ChatUsersModal(
 
 
     return (
-        <div className="chat-users-modal hidden">
+        <div className="chat-users-modal">
             <div className="exit-wrapper">
                 <button onClick={closeCb}>
                     <img src={closeImg} alt="close" />
                 </button>
             </div>
-            <div className="chat-users">
+            <div 
+                className="chat-users" 
+                onScrollEnd={(handleScroll)}
+            >
                 {chatUsers}
             </div>
         </div>
