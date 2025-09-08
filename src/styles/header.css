@@ -82,7 +82,7 @@ header nav button img {
     gap: 1rem;
     border-radius: 10px;
     width: max-content;
-    z-index: 3;
+    z-index: 4;
 }
 
 .user-menu a {
