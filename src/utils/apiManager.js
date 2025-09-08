@@ -203,6 +203,38 @@ class ApiManager {
     };
 
 
+    async getFriends(roomId) {
+        const url = (roomId) ?
+        `${this.#apiDomain}/friends?roomId=${roomId}` :
+        `${this.#apiDomain}/friends`;
+        const options = {
+            mode: "cors",
+            method: "GET",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
+    async createChat(reqBody) {
+        const url = `${this.#apiDomain}/chat/new`;
+        const options = {
+            mode: "cors",
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
