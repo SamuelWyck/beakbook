@@ -29,6 +29,13 @@ function ChatRoomBtn(
                 break;
             }
             return info;
+        } else if (users.length === 1) {
+            const user = users[0];
+            info.name = user.username;
+            info.placeholder = user.username;
+            info.img = (user.profileImgUrl)
+            ? user.profileImgUrl : profileImg;
+            return info;
         }
 
         info.img = logoImg;
