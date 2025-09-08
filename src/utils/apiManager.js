@@ -189,8 +189,9 @@ class ApiManager {
     };
 
 
-    async getChatUsers(roomId) {
-        const url = `${this.#apiDomain}/chat/users/${roomId}`;
+    async getChatUsers(roomId, pageNum) {
+        const endPoint = `/${roomId}?pageNum=${pageNum}`;
+        const url = `${this.#apiDomain}/chat/users${endPoint}`;
         const options = {
             mode: "cors",
             method: "GET",
