@@ -13,7 +13,12 @@
 .users-wrapper {
     flex: 1;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.users-wrapper > :last-child {
+    transform: rotateY(180deg);
 }
 
 .exit-wrapper {
