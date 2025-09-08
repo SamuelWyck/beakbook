@@ -41,4 +41,5 @@
     font-weight: bold;
     font-size: 1.5rem;
     color: var(--text-muted);
+    letter-spacing: .02rem;
 }
