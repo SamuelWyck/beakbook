@@ -5,7 +5,9 @@ import apiManager from "../utils/apiManager.js";
 import MessageCard from "./messageCard.jsx";
 import LoadingPage from "./loadingPage.jsx";
 import usersImg from "../assets/users.svg";
+import addUsersImg from "../assets/add-user.svg";
 import ChatUsersModal from "./chatUsersModal.jsx";
+import ChooseFriendsModal from "./chooseFriendsModal.jsx";
 
 
 
@@ -17,6 +19,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     const cancelScroll = useRef(false);
     const [messages, setMessages] = useState(null);
     const [showUsers, setShowUsers] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
 
 
     useEffect(function() {
@@ -311,6 +314,11 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
     };
 
 
+    function toggleAddModal() {
+        setShowAddModal(!showAddModal);
+    };
+
+
 
     if (!messages) {
         return (
@@ -334,6 +342,13 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                 userId={userId}
             />
             }
+            {!showAddModal ||
+            <ChooseFriendsModal
+                userId={userId}
+                roomId={roomId}
+                closeCb={toggleAddModal}
+            />
+            }
             <div className="status-modal hidden">
                 <p className="status-msg">Loading messages...</p>
                 <button onClick={hideStatus}>
@@ -342,10 +357,11 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
             </div>
             <div className="exit-wrapper">
                 <div className="users-wrapper">
-                    <button 
-                        onClick={toggleChatUsers}
-                    >
+                    <button onClick={toggleChatUsers}>
                     <img src={usersImg} alt="" /> 
+                    </button>
+                    <button onClick={toggleAddModal}>
+                        <img src={addUsersImg} alt="" />
                     </button>
                 </div>
                 <button onClick={close}>
