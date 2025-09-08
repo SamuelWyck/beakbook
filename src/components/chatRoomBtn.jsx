@@ -1,12 +1,17 @@
 import "../styles/chatRoomBtn.css";
+import { useRef, useState } from "react";
 import logoImg from "../assets/logo.png";
 import profileImg from "../assets/profile.svg";
-import { useState } from "react";
+import deleteImg from "../assets/delete.svg";
+import closeImg from "../assets/close.svg";
+import apiManager from "../utils/apiManager.js";
 
 
 
-function ChatRoomBtn({roomId, users, userId, showChat}) {
-    const [info, setInfo] = useState(getInfo(users));
+function ChatRoomBtn(
+    {roomId, users, userId, showChat, deleteCb}) {
+    const info = useRef(getInfo(users));
+    const [showDel, setShowDel] = useState(false);
 
 
     function getInfo(users) {
@@ -41,21 +46,68 @@ function ChatRoomBtn({roomId, users, userId, showChat}) {
     };
 
 
+    function toggleShowDel() {
+        setShowDel(!showDel);
+    };
+
+
+    async function leaveChat() {
+        let reqBody = {
+            roomId: roomId
+        };
+        reqBody = JSON.stringify(reqBody);
+
+        const res = apiManager.leaveChat(reqBody);
+        if (res.errors) {
+            return;
+        }
+
+        deleteCb(roomId);
+    };
+
+
     return (
-        <button 
+        <div 
             className="chat-btn" 
             data-chatid={roomId}
-            data-chatname={info.placeholder}
+            data-chatname={info.current.placeholder}
             onClick={showChat}
         >
             <div className="img-wrapper">
                 <img 
-                    src={info.img} alt="bird" 
+                    src={info.current.img} alt="bird" 
                     className="global-img" 
                 />
             </div>
-            <p>{info.name}</p>
-        </button>
+            <div className="chat-info-wrapper">
+                <p>{info.current.name}</p>
+                <div className="chat-btn-options">
+                    {(showDel) ?
+                    <>
+                    <button onClick={leaveChat}>
+                        <img 
+                            src={deleteImg} alt="" 
+                            className="chat-opt-btn-img" 
+                        />
+                    </button>
+                    <button onClick={toggleShowDel}>
+                        <img 
+                            src={closeImg} alt="" 
+                            className="chat-opt-btn-img" 
+                        />
+                    </button>
+                    </>
+                    :
+                    <button onClick={toggleShowDel}>
+                        <img 
+                            src={deleteImg} alt="" 
+                            className="chat-opt-btn-img"
+                        />
+                    </button>
+                    }
+                </div>
+            </div>
+        </div>
     );
 };
 
