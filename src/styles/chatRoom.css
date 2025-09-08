@@ -122,38 +122,6 @@ textarea#message::placeholder {
     filter: var(--filter);
 }
 
-.chat-users-modal {
-    position: absolute;
-    width: min(600px, 90%);
-    height: 70%;
-    background-color: var(--foreground-color);
-    z-index: 1;
-    left: 0;
-    right: 0;
-    top: 10%;
-    margin: 0 auto;
-    border-radius: 10px;
-    box-shadow: var(--large-shadow);
-}
-
-.chat-users-modal .exit-wrapper button {
-    background-color: var(--middleground-color);
-    border-radius: 10px;
-}
-
-.chat-users-modal .exit-wrapper button:hover {
-    background-color: var(--background-color);
-}
-
-.chat-users-modal .chat-users {
-    padding: .5rem;
-    height: calc(100% - 40px - 8px);
-    scroll-behavior: smooth;
-    scrollbar-gutter: stable;
-    scrollbar-width: thin;
-    scrollbar-color: var(--middleground-color) #00000000;
-    overflow: auto;
-}
 
 
 @media only screen and (width <= 400px) {
