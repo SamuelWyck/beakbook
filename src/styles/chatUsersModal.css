@@ -23,7 +23,7 @@
 
 .chat-users-modal .chat-users {
     padding: .5rem;
-    height: calc(100% - 40px - 24px);
+    height: calc(100% - 40px - 24px - 28px);
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
@@ -34,4 +34,11 @@
 .chat-users-modal .loading-main {
     margin-top: .5rem;
     min-height: calc(100% - 58px - 40px);
+}
+
+.chat-users-title {
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: var(--text-muted);
 }
