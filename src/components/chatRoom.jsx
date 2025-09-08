@@ -352,7 +352,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                     <img src={closeImg} alt="close" />
                 </button>
             </div>
-            <div className="messages" onScrollEnd={handleScroll}>
+            <div className="messages" onScroll={handleScroll}>
                 {messages}
             </div>
             <form onSubmit={submitMsg}>

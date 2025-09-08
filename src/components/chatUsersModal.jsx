@@ -117,7 +117,7 @@ function ChatUsersModal(
             </div>
             <div 
                 className="chat-users" 
-                onScrollEnd={(handleScroll)}
+                onScroll={(handleScroll)}
             >
                 {chatUsers}
             </div>
