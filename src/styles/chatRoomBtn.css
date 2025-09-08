@@ -1,0 +1,44 @@
+.chat-info-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.chat-btn-options {
+    display: flex;
+    gap: .5rem;
+}
+
+.chat-btn-options button {
+    cursor: pointer;
+    width: 25px;
+    display: flex;
+    background: none;
+    border: none;
+    outline: none;
+    --filter: var(--foreground-img-filter);
+}
+
+.chat-btn-options button:hover, 
+.chat-btn-options button:focus {
+    --filter: var(--highlight-img-filter);
+}
+
+.chat-btn-options button img {
+    filter: var(--filter);
+}
+
+.chat-btn p {
+    max-width: clamp(15ch, 10ch + 23vw, 60ch);
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+@media only screen and (width > 600px) {
+    .chat-btn p {
+        max-width: clamp(10ch, 5ch + 8vw, 60ch);
+    }
+}
