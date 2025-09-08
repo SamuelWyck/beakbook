@@ -9,6 +9,7 @@ import ChatRoom from "./chatRoom.jsx";
 import FriendsList from "./friendsList.jsx";
 import eleFromPoint from "../utils/eleFromPoint.js";
 import logoImg from "../assets/logo.png";
+import ChooseFriendsModal from "./chooseFriendsModal.jsx";
 
 
 
@@ -21,6 +22,7 @@ function MainPage() {
     const chatName = useRef(null);
     const [showingChat, setShowingChat] = useState(false);
     const [socket, setSocket] = useState(null);
+    const [showAddChat, setShowAddChat] = useState(false);
 
 
     useEffect(function() {
@@ -49,9 +51,11 @@ function MainPage() {
 
     useEffect(function() {
         function handleResize() {
+            setShowAddChat(false);
             const friendsPane = document.querySelector(
                 ".friends-pane"
             );
+
             if (window.innerWidth > 600) {
                 const chatBtn = this.document.querySelector(
                     ".chat-toggle"
@@ -107,6 +111,7 @@ function MainPage() {
         chatName.current = name;
         setRoomId(roomId);
         setShowingChat(true);
+        setShowAddChat(false);
         socket.emit("join-room", roomId);
     };
 
@@ -133,7 +138,6 @@ function MainPage() {
         }
 
         target.classList.add("active");
-
         let showPaneSelector = ".friends-pane";
         let hidePaneSelector = ".chat-rooms";
         let otherBtnSelector = ".chat-toggle";
@@ -145,8 +149,11 @@ function MainPage() {
                 ".status-modal-2"
             );
             status2.classList.add("hidden");
+        } else if (showAddChat) {
+            setShowAddChat(false);
         }
-
+        
+        
         const hidePane = document.querySelector(hidePaneSelector);
         const showPane = document.querySelector(showPaneSelector);
         const otherBtn = document.querySelector(otherBtnSelector);
@@ -154,6 +161,11 @@ function MainPage() {
         hidePane.classList.add("hidden");
         showPane.classList.remove("hidden");
         otherBtn.classList.remove("active");
+    };
+
+
+    function toggleAddModal() {
+        setShowAddChat(!showAddChat);
     };
 
 
@@ -166,6 +178,14 @@ function MainPage() {
     return (
     <FriendsContext value={friendsRef}>
     <main className="main-page">
+        {!showAddChat ||
+        <ChooseFriendsModal
+            userId={userData.user.id}
+            newChat={true}
+            closeCb={toggleAddModal}
+            roomId={"null"}
+        />
+        }
         <div className="sidebar">
             <div className="pane-toggle">
                 <button 
@@ -178,6 +198,10 @@ function MainPage() {
                 >Friends</button>
             </div>
             <div className="chat-rooms">
+                <div className="add-chat-btn-wrapper">
+                    <button onClick={toggleAddModal}
+                    >Create chat</button>
+                </div>
                 <button 
                     className="chat-btn" 
                     data-chatid={userData.globalChat.id}
