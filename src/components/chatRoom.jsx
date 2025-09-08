@@ -310,11 +310,17 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
 
 
     function toggleChatUsers() {
+        if (showAddModal) {
+            setShowAddModal(!showAddModal);
+        }
         setShowUsers(!showUsers);
     };
 
 
     function toggleAddModal() {
+        if (showUsers) {
+            setShowUsers(!showUsers);
+        }
         setShowAddModal(!showAddModal);
     };
 
