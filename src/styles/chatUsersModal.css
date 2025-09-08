@@ -23,10 +23,16 @@
 
 .chat-users-modal .chat-users {
     padding: .5rem;
-    height: calc(100% - 40px - 8px);
+    margin-top: .5rem;
+    height: calc(100% - 40px - 16px);
     scroll-behavior: smooth;
     scrollbar-gutter: stable;
     scrollbar-width: thin;
     scrollbar-color: var(--middleground-color) #00000000;
     overflow: auto;
+}
+
+.chat-users-modal .loading-main {
+    margin-top: .5rem;
+    min-height: calc(100% - 58px - 8px);
 }
