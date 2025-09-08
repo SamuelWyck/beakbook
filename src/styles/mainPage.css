@@ -43,7 +43,7 @@ main.main-page {
     padding: .3rem;
 }
 
-.chat-btn:hover, .chat-btn:focus {
+.chat-btn:hover, .chat-btn:focus, .chat-btn.active {
     background-color: var(--middleground-color);
 }
 
@@ -134,6 +134,12 @@ main.main-page {
 .add-chat-btn-wrapper button:hover, 
 .add-chat-btn-wrapper button:focus {
     text-decoration: underline;
+}
+
+.user-chats {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
 }
 
 
