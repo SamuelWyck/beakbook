@@ -1,0 +1,68 @@
+.friends-modal {
+    position: absolute;
+    width: min(600px, 90%);
+    height: 70%;
+    background-color: var(--foreground-color);
+    z-index: 1;
+    left: 0;
+    right: 0;
+    top: 10%;
+    margin: 0 auto;
+    border-radius: 10px;
+    box-shadow: var(--large-shadow);
+    z-index: 3;
+}
+
+.friends-modal .exit-wrapper button {
+    background-color: var(--middleground-color);
+    border-radius: 10px;
+}
+
+.friends-modal .exit-wrapper button:hover {
+    background-color: var(--background-color);
+}
+
+.friend-cards {
+    padding: .5rem;
+    height: calc(100% - 32px - 30px - 70px - 28px);
+    overflow: auto;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    scrollbar-color: var(--middleground-color) #00000000;
+}
+
+.submit-btn-wrapper {
+    display: flex;
+    justify-content: end;
+    padding: 1rem;
+}
+
+.submit-btn-wrapper button {
+    cursor: pointer;
+    background-color: var(--middleground-color);
+    font-size: 1rem;
+    font-weight: bold;
+    padding: .5rem 1rem;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    color: var(--foreground-color);
+}
+
+.submit-btn-wrapper button:hover,
+.submit-btn-wrapper button:focus {
+    background-color: var(--background-color);
+    color: var(--highlight-color);
+}
+
+.friends-modal .loading-main {
+    height: calc(100% - 32px - 30px - 70px);
+}
+
+.friends-modal-title {
+    color: var(--text-muted);
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+}
