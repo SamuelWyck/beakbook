@@ -10,6 +10,7 @@ import FriendsList from "./friendsList.jsx";
 import eleFromPoint from "../utils/eleFromPoint.js";
 import logoImg from "../assets/logo.png";
 import ChooseFriendsModal from "./chooseFriendsModal.jsx";
+import ChatRoomBtn from "./chatRoomBtn.jsx";
 
 
 
@@ -23,6 +24,7 @@ function MainPage() {
     const [showingChat, setShowingChat] = useState(false);
     const [socket, setSocket] = useState(null);
     const [showAddChat, setShowAddChat] = useState(false);
+    const [chats, setChats] = useState(null);
 
 
     useEffect(function() {
@@ -34,6 +36,7 @@ function MainPage() {
                     return;
                 }
             }
+            console.log(res)
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
             friendsRef.current = getFriendsSet(res.userData);
@@ -45,6 +48,10 @@ function MainPage() {
                 }
             );
             setSocket(socket);
+            setChats(getChatBtns(
+                res.userData.chatRooms, 
+                res.userData.user.id
+            ));
         });
     }, []);
 
@@ -81,6 +88,23 @@ function MainPage() {
     }, []);
 
 
+    function getChatBtns(chatRooms, userId) {
+        const btns = [];
+        for (let room of chatRooms) {
+            btns.push(
+                <ChatRoomBtn
+                    users={room.users}
+                    roomId={room.id}
+                    userId={userId}
+                    showChat={showChat}
+                    key={room.id}
+                />
+            );
+        }
+        return btns;
+    };
+
+
     function getFriendsSet(userData) {
         const friendSet = new Set();
 
@@ -112,7 +136,11 @@ function MainPage() {
         setRoomId(roomId);
         setShowingChat(true);
         setShowAddChat(false);
-        socket.emit("join-room", roomId);
+        // socket.emit("join-room", roomId);
+        setSocket(ws => {
+            ws.emit("join-room", roomId);
+            return ws;
+        });
     };
 
 
@@ -197,11 +225,11 @@ function MainPage() {
                     onClick={togglePanes}
                 >Friends</button>
             </div>
+            <div className="add-chat-btn-wrapper">
+                <button onClick={toggleAddModal}
+                >Create chat</button>
+            </div>
             <div className="chat-rooms">
-                <div className="add-chat-btn-wrapper">
-                    <button onClick={toggleAddModal}
-                    >Create chat</button>
-                </div>
                 <button 
                     className="chat-btn" 
                     data-chatid={userData.globalChat.id}
@@ -216,6 +244,7 @@ function MainPage() {
                     </div>
                     <p>{userData.globalChat.name}</p>
                 </button>
+                {chats}
             </div>
             <div 
                 className={`friends-pane${getClassName()}`}
