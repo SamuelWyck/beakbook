@@ -115,6 +115,9 @@ function ChatUsersModal(
                     <img src={closeImg} alt="close" />
                 </button>
             </div>
+            <p className="chat-users-title">
+                Users
+            </p>
             <div 
                 className="chat-users" 
                 onScroll={(handleScroll)}
