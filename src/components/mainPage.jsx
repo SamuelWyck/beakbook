@@ -36,7 +36,6 @@ function MainPage() {
                     return;
                 }
             }
-            console.log(res)
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
             friendsRef.current = getFriendsSet(res.userData);
@@ -97,11 +96,26 @@ function MainPage() {
                     roomId={room.id}
                     userId={userId}
                     showChat={showChat}
+                    deleteCb={removeChat}
                     key={room.id}
                 />
             );
         }
         return btns;
+    };
+
+
+    function removeChat(roomId) {
+        setChats(btns => {
+            const savedBtns = [];
+            for (let btn of btns) {
+                if (btn.props.roomId === roomId) {
+                    continue;
+                }
+                savedBtns.push(btn);
+            }
+            return savedBtns;
+        });
     };
 
 
@@ -126,9 +140,20 @@ function MainPage() {
 
 
     function showChat(event) {
+        if (event.target.matches(".chat-opt-btn-img")) {
+            return;
+        }
         const target = eleFromPoint(
             event.clientX, event.clientY, ".chat-btn"
         );
+
+        const chatBtns = document.querySelectorAll(
+            ".chat-btn"
+        );
+        for (let btn of chatBtns) {
+            btn.classList.remove("active");
+        }
+        target.classList.add("active");
         
         const roomId = target.dataset.chatid;
         const name = target.dataset.chatname;
@@ -147,6 +172,12 @@ function MainPage() {
     function handleClose() {
         setRoomId(null);
         setShowingChat(false);
+        const chatBtns = document.querySelectorAll(
+            ".chat-btn"
+        );
+        for (let btn of chatBtns) {
+            btn.classList.remove("active");
+        }
         socket.emit("leave-room", roomId);
     };
 
@@ -225,26 +256,28 @@ function MainPage() {
                     onClick={togglePanes}
                 >Friends</button>
             </div>
-            <div className="add-chat-btn-wrapper">
-                <button onClick={toggleAddModal}
-                >Create chat</button>
-            </div>
             <div className="chat-rooms">
-                <button 
-                    className="chat-btn" 
-                    data-chatid={userData.globalChat.id}
-                    data-chatname={userData.globalChat.name}
-                    onClick={showChat}
-                >
-                    <div className="img-wrapper">
-                        <img 
-                            src={logoImg} alt="bird" 
-                            className="global-img" 
-                        />
-                    </div>
-                    <p>{userData.globalChat.name}</p>
-                </button>
-                {chats}
+                <div className="add-chat-btn-wrapper">
+                    <button onClick={toggleAddModal}
+                    >Create chat</button>
+                </div>
+                <div className="user-chats">
+                    <button 
+                        className="chat-btn" 
+                        data-chatid={userData.globalChat.id}
+                        data-chatname={userData.globalChat.name}
+                        onClick={showChat}
+                    >
+                        <div className="img-wrapper">
+                            <img 
+                                src={logoImg} alt="bird" 
+                                className="global-img" 
+                            />
+                        </div>
+                        <p>{userData.globalChat.name}</p>
+                    </button>
+                    {chats}
+                </div>
             </div>
             <div 
                 className={`friends-pane${getClassName()}`}
@@ -267,6 +300,7 @@ function MainPage() {
                 userId={userData.user.id}
                 socket={socket}
                 name={chatName.current}
+                key={roomId}
             />
             }
         </div>
