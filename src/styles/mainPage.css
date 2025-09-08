@@ -115,6 +115,27 @@ main.main-page {
     background-color: var(--highlight-color);
 }
 
+.add-chat-btn-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.add-chat-btn-wrapper button {
+    cursor: pointer;
+    font-size: 1.1rem;
+    font-weight: bold;
+    background: none;
+    outline: none;
+    border: none;
+    color: var(--text-muted);
+    padding: .5rem 1rem;
+}
+
+.add-chat-btn-wrapper button:hover, 
+.add-chat-btn-wrapper button:focus {
+    text-decoration: underline;
+}
+
 
 
 @media only screen and (width <= 600px) {
