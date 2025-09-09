@@ -7,7 +7,7 @@ import LoadingPage from "./loadingPage.jsx";
 
 
 
-function ChooseFriendsModal({userId, closeCb, roomId, newChat}) {
+function ChooseFriendsModal({closeCb, roomId, newChat, socket}) {
     const [userCards, setUserCards] = useState(null);
     const selectedUsers = useRef(new Set());
 
@@ -73,7 +73,12 @@ function ChooseFriendsModal({userId, closeCb, roomId, newChat}) {
         if (res.errors) {
             return;
         }
-
+        
+        const roomIds = [];
+        for (let user of res.chat.users) {
+            roomIds.push(user.id);
+        }
+        socket.emit("add-chat", res.chat, roomIds);
         closeCb();
     };
 
