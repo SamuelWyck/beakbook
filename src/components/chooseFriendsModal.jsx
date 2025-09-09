@@ -84,7 +84,31 @@ function ChooseFriendsModal({closeCb, roomId, newChat, socket}) {
 
 
     async function addUser() {
+        let reqBody = {
+            ids: Array.from(selectedUsers.current),
+            roomId: roomId
+        }
+        reqBody = JSON.stringify(reqBody);
 
+        const res = await apiManager.joinChat(reqBody);
+        if (res.errors) {
+            return;
+        }
+
+        const roomIds = [];
+        for (let user of res.chat.users) {
+            if (!selectedUsers.current.has(user.id)) {
+                continue;
+            }
+            roomIds.push(user.id);
+            socket.emit("message", {
+                userId: user.id,
+                message: "Has joined the chat"
+            }, roomId);
+        }
+        socket.emit("add-chat", res.chat, roomIds);
+        
+        closeCb();
     };
 
 
