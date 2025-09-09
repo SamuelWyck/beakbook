@@ -91,6 +91,7 @@ textarea#message::placeholder {
     gap: .5rem;
     overflow: auto;
     scrollbar-width: thin;
+    scrollbar-gutter: stable;
     scrollbar-color: var(--foreground-color) var(--middleground-color);
     padding: .5rem;
     align-items: center;
