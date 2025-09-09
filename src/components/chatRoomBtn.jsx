@@ -9,7 +9,7 @@ import apiManager from "../utils/apiManager.js";
 
 
 function ChatRoomBtn(
-    {roomId, users, userId, showChat, deleteCb}) {
+    {roomId, users, userId, showChat, deleteCb, socket}) {
     const info = useRef(getInfo(users));
     const [showDel, setShowDel] = useState(false);
 
@@ -64,12 +64,26 @@ function ChatRoomBtn(
         };
         reqBody = JSON.stringify(reqBody);
 
-        const res = apiManager.leaveChat(reqBody);
+        const res = await apiManager.leaveChat(reqBody);
         if (res.errors) {
             return;
         }
 
-        deleteCb(roomId);
+        const emptyChat = res.chat.users.length === 0;
+        if (!emptyChat) {
+            socket.emit("message", {
+                userId: userId,
+                message: "Has left the chat"
+            }, roomId);
+
+            const roomIds = [];
+            for (let user of res.chat.users) {
+                roomIds.push(user.id);
+            }
+            socket.emit("left-chat", res.chat, roomIds);
+        }
+
+        deleteCb(roomId, res.chat, userId);
     };
 
 
