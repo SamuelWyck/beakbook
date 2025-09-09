@@ -177,9 +177,12 @@ function MainPage() {
             return savedBtns;
         });
 
-        if (showingChat) {
-            handleClose();
-        }
+        setShowingChat(showingChat => {
+            if (showingChat) {
+                handleClose();
+            }
+            return showingChat;
+        });
     };
 
 
@@ -242,7 +245,10 @@ function MainPage() {
         for (let btn of chatBtns) {
             btn.classList.remove("active");
         }
-        socket.emit("leave-room", roomId);
+        setSocket(socket => {
+            socket.emit("leave-room", roomId);
+            return socket;
+        });
     };
 
 
