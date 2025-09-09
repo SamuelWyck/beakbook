@@ -64,6 +64,9 @@ function ChooseFriendsModal({closeCb, roomId, newChat, socket}) {
 
 
     async function createChat() {
+        if (selectedUsers.current.size === 0) {
+            return;
+        }
         let reqBody = {
             ids: Array.from(selectedUsers.current)
         };
@@ -84,6 +87,9 @@ function ChooseFriendsModal({closeCb, roomId, newChat, socket}) {
 
 
     async function addUser() {
+        if (selectedUsers.current.size === 0) {
+            return;
+        }
         let reqBody = {
             ids: Array.from(selectedUsers.current),
             roomId: roomId
