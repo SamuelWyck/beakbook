@@ -353,6 +353,7 @@ function ChatRoom({roomId, handleClose, userId, socket, name}) {
                 userId={userId}
                 roomId={roomId}
                 closeCb={toggleAddModal}
+                socket={socket}
             />
             }
             <div className="status-modal hidden">
