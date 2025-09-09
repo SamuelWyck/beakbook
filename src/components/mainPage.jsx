@@ -49,10 +49,52 @@ function MainPage() {
             setSocket(socket);
             setChats(getChatBtns(
                 res.userData.chatRooms, 
-                res.userData.user.id
+                res.userData.user.id,
+                socket
             ));
         });
     }, []);
+
+
+    useEffect(function() {
+        if (socket === null) {
+            return;
+        }
+
+        socket.on("add-chat", function(chat) {
+            setChats(chats => {
+                const btn = getChatBtns(
+                    chat, userData.user.id, socket
+                );
+                return [btn, ...chats];
+            });
+        });
+
+        socket.on("left-chat", function(chat) {
+            setChats(chats => {
+                const btn = getChatBtns(
+                    chat, userData.user.id, socket, true
+                );
+                const savedCards = [];
+                for (let chatBtn of chats) {
+                    if (chatBtn.props.roomId === chat.id) {
+                        savedCards.push(btn);
+                        continue;
+                    }
+                    savedCards.push(chatBtn);
+                }
+                return savedCards;
+            });
+        });
+
+        return function() {
+            if (socket === null) {
+                return;
+            }
+            socket.off("add-chat");
+            socket.off("left-chat");
+        };
+    }, [socket]);
 
 
     useEffect(function() {
@@ -87,7 +129,24 @@ function MainPage() {
     }, []);
 
 
-    function getChatBtns(chatRooms, userId) {
+    function getChatBtns(chatRooms, userId, socket, randKey) {
+        if (!Array.isArray(chatRooms)) {
+            const btn = <ChatRoomBtn
+                users={chatRooms.users}
+                userId={userId}
+                roomId={chatRooms.id}
+                showChat={showChat}
+                deleteCb={removeChat}
+                socket={socket}
+                key={
+                    (randKey) ? 
+                    chatRooms.id + String(Math.random()) : 
+                    chatRooms.id
+                }
+            />
+            return btn;
+        }
+
         const btns = [];
         for (let room of chatRooms) {
             btns.push(
@@ -97,6 +156,7 @@ function MainPage() {
                     userId={userId}
                     showChat={showChat}
                     deleteCb={removeChat}
+                    socket={socket}
                     key={room.id}
                 />
             );
@@ -116,6 +176,10 @@ function MainPage() {
             }
             return savedBtns;
         });
+
+        if (showingChat) {
+            handleClose();
+        }
     };
 
 
@@ -239,10 +303,10 @@ function MainPage() {
     <main className="main-page">
         {!showAddChat ||
         <ChooseFriendsModal
-            userId={userData.user.id}
             newChat={true}
             closeCb={toggleAddModal}
             roomId={"null"}
+            socket={socket}
         />
         }
         <div className="sidebar">
