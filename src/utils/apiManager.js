@@ -252,6 +252,23 @@ class ApiManager {
     };
 
 
+    async joinChat(reqBody) {
+        const url = `${this.#apiDomain}/chat/join`;
+        const options = {
+            mode: "cors",
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
