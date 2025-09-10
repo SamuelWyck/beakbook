@@ -1,6 +1,7 @@
 import App from "./App.jsx";
 import AuthPage from "./components/authPage.jsx";
 import MainPage from "./components/mainPage.jsx";
+import ProfilePage from "./components/profilePage.jsx";
 
 
 
@@ -13,6 +14,10 @@ const routes = [
                 path: "/",
                 index: true,
                 element: <MainPage />
+            },
+            {
+                path: "/profile",
+                element: <ProfilePage />
             }
         ]
     },
