@@ -210,9 +210,13 @@ function MainPage() {
         if (event.target.matches(".chat-opt-btn-img")) {
             return;
         }
-        const target = eleFromPoint(
-            event.clientX, event.clientY, ".chat-btn"
-        );
+        
+        let target = event.target;
+        if (!target.matches(".chat-btn")) {
+            target = eleFromPoint(
+                event.clientX, event.clientY, ".chat-btn"
+            );
+        }
 
         const chatBtns = document.querySelectorAll(
             ".chat-btn"
