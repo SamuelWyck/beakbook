@@ -35,6 +35,33 @@
     text-overflow: ellipsis;
 }
 
+.chat-btn .img-wrapper {
+    position: relative;
+}
+
+.notification-icon {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: var(--notification-color);
+    bottom: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.notification-icon > div {
+    width: 10px;
+    height: 10px;
+    background-color: var(--text-muted);
+    border-radius: 50%;
+}
+
+.notification-icon.hidden {
+    display: none;
+}
 
 
 @media only screen and (width > 600px) {
