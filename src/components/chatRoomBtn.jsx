@@ -9,7 +9,7 @@ import apiManager from "../utils/apiManager.js";
 
 
 function ChatRoomBtn(
-    {roomId, users, userId, showChat, deleteCb, socket}) {
+    {roomId, users, userId, showChat, deleteCb, socket, alert}) {
     const info = useRef(getInfo(users));
     const [showDel, setShowDel] = useState(false);
 
@@ -99,6 +99,14 @@ function ChatRoomBtn(
                     src={info.current.img} alt="bird" 
                     className="global-img" 
                 />
+                <div 
+                    className={`notification-icon${
+                        (alert) ? "" : " hidden"
+                    }`}
+                    data-chatid={roomId}
+                >
+                    <div></div>
+                </div>
             </div>
             <div className="chat-info-wrapper">
                 <p>{info.current.name}</p>
