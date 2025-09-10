@@ -17,6 +17,7 @@ html {
 	--highlight-color: hsl(242, 30%, 66%);
 	--text-muted: hsl(0, 0%, 85%);
 	--text-sharp: hsl(0, 0%, 95%);
+	--notification-color: hsl(0, 73%, 59%);
 	--large-shadow: 0px 0px 10px 0px black;
 	--small-shadow: 0px 0px 5px 0px black;
 	--background-img-filter: 
