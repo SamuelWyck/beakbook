@@ -269,6 +269,23 @@ class ApiManager {
     };
 
 
+    async findUserDM(reqBody) {
+        const url = `${this.#apiDomain}/chat/find`;
+        const options = {
+            mode: "cors",
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
