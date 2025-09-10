@@ -151,6 +151,7 @@ function FriendsList(
                        key={relation.id}
                        deleteCb={delFriendCard}
                        statusCb={showStatus}
+                       socket={socket}
                     />
                 );
             }
@@ -164,6 +165,7 @@ function FriendsList(
                        key={relation.id}
                        deleteCb={delFriendCard}
                        statusCb={showStatus}
+                       socket={socket}
                     />
                 );
             }
@@ -179,6 +181,7 @@ function FriendsList(
             key={relationId}
             deleteCb={delFriendCard}
             statusCb={showStatus}
+            socket={socket}
         />
         return card;
     };
