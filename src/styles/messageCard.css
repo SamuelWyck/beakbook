@@ -70,6 +70,14 @@
     padding: 1rem;
     border-radius: 10px;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.options-modal.hidden {
+    display: none;
 }
 
 .options-modal button {
