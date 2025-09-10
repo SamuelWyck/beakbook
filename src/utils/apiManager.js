@@ -286,6 +286,19 @@ class ApiManager {
     };
 
 
+    async getProfileData() {
+        const url = `${this.#apiDomain}/user/profile`;
+        const options = {
+            mode: "cors",
+            method: "GET",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
