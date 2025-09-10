@@ -42,11 +42,14 @@ function ChatUsersModal(
         for (let user of users) {
             cards.push(
                 <ChatUserCard
-                    closeCb={chatCloseCb}
+                    chatCloseCb={chatCloseCb}
+                    modalCloseCb={closeCb}
                     user={user}
                     userId={userId}
                     key={user.id}
                     requestCb={broadcastFriendRequst}
+                    socket={socket}
+                    statusCb={showStatus}
                 />
             );
         }
