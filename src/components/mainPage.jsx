@@ -20,6 +20,7 @@ function MainPage() {
     const friendsRef = useRef(new Set());
     const [userData, setUserData] = useState(null);
     const [roomId, setRoomId] = useState(null);
+    const roomIdRef = useRef(null);
     const chatName = useRef(null);
     const [showingChat, setShowingChat] = useState(false);
     const [socket, setSocket] = useState(null);
@@ -35,6 +36,7 @@ function MainPage() {
                     navigate("/signup", {replace: true});
                     return;
                 }
+                return;
             }
             setUserData(res.userData);
             headerRef.current.updateUser(res.userData.user);
@@ -50,7 +52,9 @@ function MainPage() {
             setChats(getChatBtns(
                 res.userData.chatRooms, 
                 res.userData.user.id,
-                socket
+                socket,
+                false,
+                res.userData.notifications
             ));
         });
     }, []);
@@ -68,6 +72,13 @@ function MainPage() {
                 );
                 return [btn, ...chats];
             });
+
+            setTimeout(function() {
+                const notifyIcon = document.querySelector(
+                    `.notification-icon[data-chatid="${chat.id}"]`
+                );
+                notifyIcon.classList.remove("hidden");
+            }, 1);
         });
 
         socket.on("left-chat", function(chat) {
@@ -87,12 +98,24 @@ function MainPage() {
             });
         });
 
+        socket.on("new-msg", function(chatId) {
+            if (roomIdRef.current === chatId) {
+                return;
+            }
+
+            const notifyIcon = document.querySelector(
+                `.notification-icon[data-chatid="${chatId}"]`
+            );
+            notifyIcon.classList.remove("hidden");
+        });
+
         return function() {
             if (socket === null) {
                 return;
             }
             socket.off("add-chat");
             socket.off("left-chat");
+            socket.off("new-msg");
         };
     }, [socket]);
 
@@ -129,7 +152,7 @@ function MainPage() {
     }, []);
 
 
-    function getChatBtns(chatRooms, userId, socket, randKey) {
+    function getChatBtns(chatRooms, userId, socket, randKey, notifications) {
         if (!Array.isArray(chatRooms)) {
             const btn = <ChatRoomBtn
                 users={chatRooms.users}
@@ -147,6 +170,10 @@ function MainPage() {
             return btn;
         }
 
+        const alertMap = {};
+        for (let alert of notifications) {
+            alertMap[alert.chatRoomId] = alert.active;
+        }
         const btns = [];
         for (let room of chatRooms) {
             btns.push(
@@ -158,6 +185,7 @@ function MainPage() {
                     deleteCb={removeChat}
                     socket={socket}
                     key={room.id}
+                    alert={alertMap[room.id]}
                 />
             );
         }
@@ -227,9 +255,16 @@ function MainPage() {
         target.classList.add("active");
         
         const roomId = target.dataset.chatid;
+        const notifyIcon = document.querySelector(
+            `.notification-icon[data-chatid="${roomId}"]`
+        );
+        if (notifyIcon) {
+            notifyIcon.classList.add("hidden");
+        }
         const name = target.dataset.chatname;
         chatName.current = name;
         setRoomId(roomId);
+        roomIdRef.current = roomId;
         setShowingChat(true);
         setShowAddChat(false);
         // socket.emit("join-room", roomId);
@@ -242,6 +277,7 @@ function MainPage() {
 
     function handleClose() {
         setRoomId(null);
+        roomIdRef.current = null;
         setShowingChat(false);
         const chatBtns = document.querySelectorAll(
             ".chat-btn"
