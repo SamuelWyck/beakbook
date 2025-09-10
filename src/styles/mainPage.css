@@ -21,6 +21,7 @@ main.main-page {
     width: 100%;
     flex-direction: column;
     gap: .2rem;
+    height: 100%;
 }
 
 .chat-rooms.hidden {
@@ -140,6 +141,12 @@ main.main-page {
     display: flex;
     flex-direction: column;
     gap: .2rem;
+    height: 100%;
+    overflow: auto;
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+    scrollbar-color: var(--foreground-color) #00000000;
 }
 
 
