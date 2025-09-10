@@ -19,7 +19,8 @@ function MessageCard(
         deleteCb, 
         statusCb, 
         requestCb, 
-        closeCb
+        closeCb,
+        socket
     }) {
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
@@ -159,6 +160,41 @@ function MessageCard(
     };
 
 
+    async function findUserDM() {
+        let reqBody = {
+            ids: [msg.authorId]
+        };
+        reqBody = JSON.stringify(reqBody);
+
+        const res = await apiManager.findUserDM(reqBody);
+        if (res.errors) {
+            statusCb("Unable to open chat");
+            return;
+        }
+        
+        if (!res.found) {
+            const roomIds = [];
+            for (let user of res.chat.users) {
+                roomIds.push(user.id);
+            }
+            socket.emit("add-chat", res.chat, roomIds);
+            socket.once("add-chat", function() {
+                setTimeout(function() {
+                    const roomBtn = document.querySelector(
+                        `.chat-btn[data-chatid="${res.chat.id}"]`
+                    );
+                    roomBtn.click();
+                }, 1);
+            });
+        } else {
+            const roomBtn = document.querySelector(
+                `.chat-btn[data-chatid="${res.chat.id}"]`
+            );
+            roomBtn.click();
+        }
+    };
+
+
     if (deleted) {
         return null;
     }
@@ -205,6 +241,9 @@ function MessageCard(
                             onClick={goToFriendList}
                         >Remove friend</button>
                         }
+                        <button 
+                            onClick={findUserDM}
+                        >Message</button>
                     </span>
                     <p className="msg-username">
                         {msg.author.username}
