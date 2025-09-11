@@ -299,6 +299,23 @@ class ApiManager {
     };
 
 
+    async changePassword(reqBody) {
+        const url = `${this.#apiDomain}/user/change-password`;
+        const options = {
+            mode: "cors",
+            method: "PUT",
+            credentials: "include",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: reqBody
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
