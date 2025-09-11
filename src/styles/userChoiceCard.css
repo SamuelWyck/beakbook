@@ -15,9 +15,12 @@
 
 .choice-card-profile-wrapper {
     width: 40px;
+    height: 40px;
     display: flex;
     flex-basis: 40px;
     flex-shrink: 0;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .choice-card-profile-wrapper img {

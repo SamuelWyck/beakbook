@@ -16,6 +16,8 @@
     max-width: 40px;
     max-height: 40px;
     display: flex;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .friend-profile-wrapper img {

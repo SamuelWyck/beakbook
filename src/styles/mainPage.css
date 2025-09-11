@@ -48,11 +48,6 @@ main.main-page {
     background-color: var(--middleground-color);
 }
 
-.chat-btn .img-wrapper {
-    max-width: 40px;
-    display: flex;
-}
-
 .chat-btn img {
     width: 100%;
 }

@@ -58,6 +58,8 @@ header nav button img.default {
 
 header nav button img {
     width: 45px;
+    height: 45px;
+    border-radius: 50%;
 }
 
 .menu-arrow {

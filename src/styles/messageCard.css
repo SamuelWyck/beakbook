@@ -38,7 +38,10 @@
 }
 
 .msg-profile-wrapper {
-    max-width: 45px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    overflow: hidden;
     display: flex;
     cursor: pointer;
 }
