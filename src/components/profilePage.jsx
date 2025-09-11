@@ -1,6 +1,6 @@
 import "../styles/profilePage.css";
 import profileImg from "../assets/profile.svg";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useOutletContext } from "react-router-dom";
 import LoadingPage from "./loadingPage.jsx";
 import apiManager from "../utils/apiManager.js";
@@ -12,6 +12,7 @@ function ProfilePage() {
     const [showDel, setShowDel] = useState(false);
     const [errors, setErrors] = useState(null);
     const headerRef = useOutletContext();
+    const uploading = useRef(false);
 
 
     useEffect(function() {
@@ -69,6 +70,37 @@ function ProfilePage() {
     };
 
 
+    function requestSubmit() {
+        if (uploading.current) {
+            return;
+        }
+
+        const imgForm = document.querySelector(
+            ".profile-img > form"
+        );
+        imgForm.requestSubmit();
+    };
+
+
+    async function uploadImg(event) {
+        event.preventDefault();
+        if (uploading.current) {
+            return;
+        }
+        uploading.current = true;
+
+        const formData = new FormData(event.target);
+        const res = await apiManager.uploadImage(formData);
+        if (res.errors) {
+            return;
+        }
+
+        setUser(res.user);
+        uploading.current = false;
+        event.target.reset();
+    };
+
+
     if (!user) {
         return <LoadingPage />;
     }
@@ -88,16 +120,19 @@ function ProfilePage() {
                     <img src={profileImg} className="default"/>
                     }
                 </div>
-                <form encType="multipart/form-data">
+                <form 
+                    encType="multipart/form-data" 
+                    onSubmit={uploadImg}
+                >
                     <div>
-                        <label 
-                            htmlFor="image"
-                            tabIndex={0}
-                        >Upload image</label>
+                        <label htmlFor="image" tabIndex={0}>
+                            Upload image
+                        </label>
                         <input 
                             type="file" 
                             id="image" 
-                            name="image" 
+                            name="image"
+                            onChange={requestSubmit} 
                         />
                     </div>
                 </form>
