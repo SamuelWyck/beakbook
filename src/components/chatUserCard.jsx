@@ -148,8 +148,8 @@ function ChatUserCard(
                 <button onClick={findUserDM}>Message</button>
             </span>
             <div className="chat-user-profile-wrapper">
-                {(user.profileImg) ?
-                <img src={user.profileImg} alt="" />
+                {(user.profileImgUrl) ?
+                <img src={user.profileImgUrl} alt="" />
                 :
                 <img className="default" src={profileImg} />
                 }
