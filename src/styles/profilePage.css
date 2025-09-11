@@ -1,0 +1,134 @@
+.profile-page {
+    background-color: var(--middleground-color);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 4rem 0;
+}
+
+.profile-username {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-muted);
+}
+
+.profile-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    gap: 6rem;
+}
+
+.profile-img-wrapper {
+    max-width: 250px;
+    border-radius: 50%;
+    box-shadow: var(--large-shadow);
+    display: flex;
+}
+
+.profile-img-wrapper img {
+    width: 100%;
+}
+
+.profile-img-wrapper img.default {
+    filter: var(--highlight-img-filter);
+}
+
+.profile-page label {
+    display: block;
+}
+
+.profile-page input[type="file"] {
+    display: none;
+}
+
+.profile-img label[for="image"] {
+    cursor: pointer;
+    background-color: var(--highlight-color);
+    color: var(--background-color);
+    padding: 1rem;
+    font-weight: bold;
+    border-radius: 10px;
+    box-shadow: var(--large-shadow);
+    outline: none;
+}
+
+.profile-img label[for="image"]:hover,
+.profile-img label[for="image"]:focus {
+    color: var(--middleground-color);
+    background-color: var(--foreground-color);
+    box-shadow: none;
+}
+
+.profile-img {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.profile-page button {
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    background-color: var(--highlight-color);
+    border: none;
+    outline: none;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: var(--large-shadow);
+}
+
+.profile-page button:hover,
+.profile-page button:focus {
+    color: var(--middleground-color);
+    background-color: var(--foreground-color);
+    box-shadow: none;
+}
+
+.del-options {
+    display: flex;
+    gap: 1rem;
+}
+
+.profile-info > form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    color: var(--text-muted);
+    font-size: 1.5rem;
+    align-items: center;
+}
+
+.profile-info > form input {
+    font-size: 1.2rem;
+    font-family: "roboto", sans-serif;
+    outline: none;
+    padding: .2rem .5rem;
+    border: 2px solid var(--foreground-color);
+    border-radius: 10px;
+    color: var(--text-muted);
+    background-color: var(--background-color);
+    box-shadow: var(--large-shadow);
+    height: 3.5ch;
+}
+
+.profile-info > form input:hover,
+.profile-info > form input:focus {
+    background-color: var(--middleground-color);
+    border-color: var(--highlight-color);
+    box-shadow: none;
+}
+
+.profile-info > form label {
+    font-size: 1.2rem;
+    margin-bottom: .3rem;
+    margin-left: .2rem;
+}
+
+.profile-info .error {
+    font-size: 1.1rem;
+}
