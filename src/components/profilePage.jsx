@@ -1,6 +1,7 @@
 import "../styles/profilePage.css";
 import profileImg from "../assets/profile.svg";
 import { useEffect, useState } from "react";
+import { useOutletContext } from "react-router-dom";
 import LoadingPage from "./loadingPage.jsx";
 import apiManager from "../utils/apiManager.js";
 
@@ -9,6 +10,8 @@ import apiManager from "../utils/apiManager.js";
 function ProfilePage() {
     const [user, setUser] = useState(null);
     const [showDel, setShowDel] = useState(false);
+    const [errors, setErrors] = useState(null);
+    const headerRef = useOutletContext();
 
 
     useEffect(function() {
@@ -18,12 +21,51 @@ function ProfilePage() {
             }
 
             setUser(res.user);
+            headerRef.current.updateUser(res.user);
         });
-    }, []);
+    }, [headerRef]);
 
 
     function toggleDel() {
         setShowDel(!showDel);
+    };
+
+
+    async function changePassword(event) {
+        event.preventDefault();
+        const formData = new FormData(event.target);
+
+        let reqBody = {};
+        for (let entry of formData.entries()) {
+            const [key, value] = entry;
+            reqBody[key] = value;
+        }
+        reqBody = JSON.stringify(reqBody);
+
+        const res = await apiManager.changePassword(reqBody);
+        if (res.errors) {
+            console.log(res.errors)
+            setErrors(getErrorCards(res.errors));
+            return;
+        }
+
+        if (errors) {
+            setErrors(null);
+        }
+        event.target.reset();
+    };
+
+
+    function getErrorCards(errors) {
+        const cards = [];
+        for (let error of errors) {
+            cards.push(
+                <li key={error.msg} className="error">
+                    {error.msg}
+                </li>
+            );
+        }
+        return cards;
     };
 
 
@@ -50,6 +92,7 @@ function ProfilePage() {
                     <div>
                         <label 
                             htmlFor="image"
+                            tabIndex={0}
                         >Upload image</label>
                         <input 
                             type="file" 
@@ -61,16 +104,19 @@ function ProfilePage() {
                 {(!showDel) ?
                 <button onClick={toggleDel}>Remove Image</button>
                 :
-                <>
-                <button>Remove</button>
+                <div className="del-options">
                 <button onClick={toggleDel}>Cancel</button>
-                </>
+                <button>Remove</button>
+                </div>
                 }
             </div>
-            <form>
+            <form onSubmit={changePassword}>
                 <p className="change-pwd-title">
                     Change password
                 </p>
+                {!errors ||
+                <ul className="errors">{errors}</ul>
+                }
                 <div>
                     <label htmlFor="old-password">
                         Old password
@@ -78,7 +124,7 @@ function ProfilePage() {
                     <input 
                         type="password"
                         id="old-password"
-                        name="old-password"
+                        name="oldPassword"
                     />
                 </div>
                 <div>
@@ -88,12 +134,12 @@ function ProfilePage() {
                     <input 
                         type="password" 
                         id="new-password" 
-                        name="new-password" 
+                        name="newPassword" 
                     />
                 </div>
                 <div>
                     <label htmlFor="confirm">
-                        Confirm
+                        Confirm new password
                     </label>
                     <input 
                         type="password" 
