@@ -96,6 +96,7 @@ function ProfilePage() {
         }
 
         setUser(res.user);
+        headerRef.current.updateUser(res.user);
         uploading.current = false;
         event.target.reset();
     };
