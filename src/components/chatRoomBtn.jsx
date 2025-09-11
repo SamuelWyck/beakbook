@@ -24,31 +24,39 @@ function ChatRoomBtn(
                 }
                 info.name = user.username;
                 info.placeholder = user.username;
-                info.img = (user.profileImgUrl)
-                ? user.profileImgUrl : profileImg;
+                info.img = profileImg;
+                info.imgClass = "default";
+                if (user.profileImgUrl) {
+                    info.img = user.profileImgUrl;
+                    info.imgClass = "";
+                }
                 break;
             }
-            return info;
         } else if (users.length === 1) {
             const user = users[0];
             info.name = user.username;
             info.placeholder = user.username;
-            info.img = (user.profileImgUrl)
-            ? user.profileImgUrl : profileImg;
-            return info;
+            info.imgClass = "default";
+            info.img = profileImg;
+            if (user.profileImgUrl) {
+                info.img = user.profileImgUrl;
+                info.imgClass = "";
+            }
+        } else {
+            info.img = logoImg;
+            info.placeholder = "Group";
+            info.imgClass = "";
+            const chatName = [];
+            for (let i = 0; i < users.length; i += 1) {
+                const user = users[i];
+                chatName.push(user.username);
+                if (i < users.length - 1) {
+                    chatName.push(", ");
+                }
+            };
+            info.name = chatName.join("");
         }
 
-        info.img = logoImg;
-        info.placeholder = "Group";
-        const chatName = [];
-        for (let i = 0; i < users.length; i += 1) {
-            const user = users[i];
-            chatName.push(user.username);
-            if (i < users.length - 1) {
-                chatName.push(", ");
-            }
-        };
-        info.name = chatName.join("");
         return info;
     };
 
@@ -97,7 +105,7 @@ function ChatRoomBtn(
             <div className="img-wrapper">
                 <img 
                     src={info.current.img} alt="bird" 
-                    className="global-img" 
+                    className={info.current.imgClass} 
                 />
                 <div 
                     className={`notification-icon${
