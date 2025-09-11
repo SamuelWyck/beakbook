@@ -26,7 +26,7 @@ class Header extends Component {
         if (!user && !this.state.user) {
             return;
         }
-        if ((user && this.state.user) && user.id === this.state.user.id) {
+        if ((user && this.state.user) && user.profileImgUrl === this.state.user.profileImgUrl) {
             return;
         }
 
