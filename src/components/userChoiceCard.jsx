@@ -22,8 +22,8 @@ function UserChoiceCard({user, selectCb, unselectCb}) {
     return (
     <div className="user-choice-card" onClick={toggleSelected}>
         <div className="choice-card-profile-wrapper">
-            {(user.profileImg) ?
-            <img src={user.profileImg} alt="" />
+            {(user.profileImgUrl) ?
+            <img src={user.profileImgUrl} alt="" />
             :
             <img className="default" src={profileImg} />
             }
