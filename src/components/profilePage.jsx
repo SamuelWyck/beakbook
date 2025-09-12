@@ -91,14 +91,32 @@ function ProfilePage() {
 
         const formData = new FormData(event.target);
         const res = await apiManager.uploadImage(formData);
+        uploading.current = false;
+        event.target.reset();
         if (res.errors) {
             return;
         }
 
         setUser(res.user);
         headerRef.current.updateUser(res.user);
+    };
+
+
+    async function deleteImg() {
+        if (uploading.current) {
+            return;
+        }
+        uploading.current = true;
+
+        const res = await apiManager.deleteImage();
         uploading.current = false;
-        event.target.reset();
+        setShowDel(false);
+        if (res.errors) {
+            return;
+        }
+
+        setUser(res.user);
+        headerRef.current.updateUser(res.user);
     };
 
 
@@ -142,7 +160,7 @@ function ProfilePage() {
                 :
                 <div className="del-options">
                 <button onClick={toggleDel}>Cancel</button>
-                <button>Remove</button>
+                <button onClick={deleteImg}>Remove</button>
                 </div>
                 }
             </div>
