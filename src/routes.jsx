@@ -2,10 +2,19 @@ import App from "./App.jsx";
 import AuthPage from "./components/authPage.jsx";
 import MainPage from "./components/mainPage.jsx";
 import ProfilePage from "./components/profilePage.jsx";
+import { Navigate } from "react-router-dom";
 
 
 
 const routes = [
+    {
+        path: "/signup",
+        element: <AuthPage signup={true} />
+    },
+    {
+        path: "/login",
+        element: <AuthPage signup={false} />
+    },
     {
         path: "/",
         element: <App />,
@@ -18,16 +27,12 @@ const routes = [
             {
                 path: "/profile",
                 element: <ProfilePage />
+            },
+            {
+                path: "/*",
+                element: <Navigate to="/" replace={true} />
             }
         ]
-    },
-    {
-        path: "/signup",
-        element: <AuthPage signup={true} />
-    },
-    {
-        path: "/login",
-        element: <AuthPage signup={false} />
     }
 ];
 
