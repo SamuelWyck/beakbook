@@ -330,6 +330,19 @@ class ApiManager {
     };
 
 
+    async deleteImage() {
+        const url = `${this.#apiDomain}/user/delete-image`;
+        const options = {
+            mode: "cors",
+            method: "DELETE",
+            credentials: "include"
+        };
+
+        const response = await this.#makeApiCall(url, options);
+        return response;
+    };
+
+
     getSocketUrl() {
         return this.#apiDomain;
     };
