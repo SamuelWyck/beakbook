@@ -30,7 +30,7 @@
 }
 
 .chat-btn p {
-    max-width: clamp(15ch, 10ch + 23vw, 60ch);
+    max-width: clamp(15ch, 10ch + 21vw, 60ch);
     overflow: hidden;
     text-overflow: ellipsis;
 }
