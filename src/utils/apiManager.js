@@ -1,5 +1,5 @@
 class ApiManager {
-    #apiDomain = "http://localhost:3000";
+    #apiDomain = "https://beakbook-api.onrender.com";
 
 
     async #makeApiCall(url, options) {
